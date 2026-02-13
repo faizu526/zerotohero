@@ -90,37 +90,27 @@ TEMPLATES = [{
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ===== DATABASE =====
-# Render provides DATABASE_URL environment variable
-import dj_database_url
+# Check for DATABASE_URL from Render or use SQLite fallback
+USE_SQLITE = os.environ.get('USE_SQLITE', 'False') == 'True'
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
-
-# Fallback for local development without DATABASE_URL
-if not os.environ.get('DATABASE_URL'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'zerotohero'),
-            'USER': os.environ.get('DB_USER', 'zth_user'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'zth_password123'),
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
-        }
-    }
-
-# SQLite fallback for development
-if os.environ.get('USE_SQLITE', 'False') == 'True':
+if USE_SQLITE or not DATABASE_URL:
+    # Use SQLite for development or if no DATABASE_URL
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
+    }
+else:
+    # Use PostgreSQL with DATABASE_URL from Render
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
 
 # ===== AUTHENTICATION SETTINGS =====

@@ -20,7 +20,7 @@ python manage.py migrate
 
 # Create superuser if not exists (optional - for first deployment)
 echo "👤 Checking superuser..."
-python manage.py shell << EOF
+python manage.py shell -c "
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='admin').exists():
@@ -28,6 +28,6 @@ if not User.objects.filter(username='admin').exists():
     print('✅ Superuser created: admin/admin123')
 else:
     print('✅ Superuser already exists')
-EOF
+" 2>/dev/null || echo "⚠️ Superuser creation skipped"
 
 echo "✅ Build completed successfully!"
