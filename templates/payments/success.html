@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful · Zero To Hero{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="glass-card p-5" style="max-width:500px; margin:0 auto;">
+        <div style="font-size:5rem; margin-bottom:1rem;">🎉</div>
+        <h2 class="mb-3">Payment Successful!</h2>
+        <p class="mb-4">Thank you for your purchase. Your order has been placed and you will receive a confirmation email shortly.</p>
+        
+        <div class="d-grid gap-2">
+            <a href="{% url 'dashboard-my-courses' %}" class="btn btn-primary">View My Courses →</a>
+            <a href="{% url 'home' %}" class="btn btn-outline-light">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

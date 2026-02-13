@@ -1,0 +1,24 @@
+{% load static %}
+<!-- templates/partials/navbar.html -->
+<nav class="navbar">
+   <a href="{% url 'home' %}" class="logo">🚀 Zero To <span style="color: #0f172a;">Hero</span></a>
+
+    <ul class="nav-links">
+        <li><a href="{% url 'home' %}">🏠 Home</a></li>
+        <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
+        <li><a href="{% url 'products' %}">📚 Courses</a></li>
+        <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+        <li><a href="{% url 'pricing' %}">💰 Pricing</a></li>
+        <li><a href="{% url 'roadmap' %}">🛣️ Roadmaps</a></li>
+        <li><a href="{% url 'about' %}">👨‍💻 About</a></li>
+    </ul>
+    <div class="nav-buttons">
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard-overview' %}" class="btn btn-secondary">📊 Dashboard</a>
+            <a href="{% url 'logout' %}" class="btn btn-outline">🚪 Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
+        {% endif %}
+    </div>
+</nav>

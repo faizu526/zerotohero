@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - WISHLIST PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+        
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            list-style: none;
+        }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #475569;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .main-content {
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .wishlist-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: 0.2s;
+            position: relative;
+        }
+        .wishlist-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+        .card-gem {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, white);
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .remove-btn:hover {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-commission { background: #dbeafe; color: #1e40af; }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-success { background: #10b981; color: white; }
+        
+        @media (max-width: 1024px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .wishlist-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .wishlist-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    
+    <!-- INLINE JS - WISHLIST PAGE ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Wishlist page loaded');
+            
+            // Remove from wishlist
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const card = this.closest('.wishlist-card');
+                    const course = card.querySelector('h3').textContent;
+                    
+                    if (confirm(`Remove "${course}" from your wishlist?`)) {
+                        card.style.animation = 'fadeOut 0.3s ease';
+                        setTimeout(() => {
+                            card.remove();
+                            alert(`✅ Removed from wishlist: ${course}`);
+                        }, 300);
+                    }
+                });
+            });
+            
+            // Add to cart buttons
+            document.querySelectorAll('.wishlist-card .btn-primary').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const course = this.closest('.wishlist-card').querySelector('h3').textContent;
+                    alert(`🛒 Added to cart: ${course}\n\nThis is a demo. Backend cart coming soon.`);
+                });
+            });
+            
+            // Add animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(20px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="{% url 'home' %}" class="sidebar-logo">
+                🚀 Zero To <span style="color:#0f172a;">Hero</span>
+            </a>
+            
+            <div style="display:flex; align-items:center; gap:0.75rem; padding:1rem; background:#f8fafc; border-radius:16px; margin-bottom:2rem;">
+                <div style="width:48px; height:48px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👨‍💻</div>
+                <div>
+                    <div style="font-weight:600;">Faizu</div>
+                    <div style="font-size:0.85rem; color:#64748b;">student@zerotohero.com</div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard-overview' %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'dashboard-my-courses' %}">📚 My Courses</a></li>
+                <li><a href="{% url 'dashboard-orders' %}">🛒 Orders</a></li>
+                <li><a href="{% url 'dashboard-wishlist' %}" class="active">❤️ Wishlist</a></li>
+                <li><a href="{% url 'dashboard-affiliate' %}">💰 Affiliate Earnings</a></li>
+                <li><a href="{% url 'dashboard-settings' %}">⚙️ Settings</a></li>
+                <li style="margin-top:2rem;"><a href="{% url 'home' %}">← Back to Site</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                <div>
+                    <h1 style="font-family:'Caveat'; font-size:2.5rem; margin-bottom:0.25rem;">❤️ My Wishlist</h1>
+                    <p style="color:#64748b;">8 saved courses · Total value: ₹24,591 · You save: ₹1,475</p>
+                </div>
+                <a href="../products.html" class="btn btn-primary" style="padding:0.75rem 1.5rem;">
+                    🔍 Browse More
+                </a>
+            </div>
+            
+            <!-- Wishlist Grid -->
+            <div class="wishlist-grid">
+                <!-- OSCP Course -->
+                <div class="wishlist-card">
+                    <div class="remove-btn">✕</div>
+                    <div style="width:50px; height:50px; border-radius:12px; background:linear-gradient(135deg, #1a1a2e, #16213e); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:0.75rem;">🎯</div>
+                    <h3 style="margin-bottom:0.25rem;">OSCP Certification Prep</h3>
+                    <p style="color:#64748b; font-size:0.9rem; margin-bottom:0.75rem;">HackTheBox · Advanced</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                        <div>
+                            <span style="color:#64748b; text-decoration:line-through;">₹4,999</span>
+                            <span style="font-weight:700; color:#2563eb; margin-left:8px;">₹5,149</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm">Add to Cart</button>
+                    </div>
+                    <span class="badge badge-commission">Your commission: ₹154</span>
+                </div>
+                
+                <!-- AWS Solutions Architect -->
+                <div class="wishlist-card">
+                    <div class="remove-btn">✕</div>
+                    <span style="font-size:2.5rem; display:block; margin-bottom:0.75rem;">☁️</span>
+                    <h3 style="margin-bottom:0.25rem;">AWS Solutions Architect</h3>
+                    <p style="color:#64748b; font-size:0.9rem; margin-bottom:0.75rem;">AWS · Professional</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                        <div>
+                            <span style="color:#64748b; text-decoration:line-through;">₹8,999</span>
+                            <span style="font-weight:700; color:#2563eb; margin-left:8px;">₹9,269</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm">Add to Cart</button>
+                    </div>
+                    <span class="badge badge-commission">Your commission: ₹270</span>
+                </div>
+                
+                <!-- CISSP Certification -->
+                <div class="wishlist-card">
+                    <div class="remove-btn">✕</div>
+                    <span style="font-size:2.5rem; display:block; margin-bottom:0.75rem;">🔐</span>
+                    <h3 style="margin-bottom:0.25rem;">CISSP Certification</h3>
+                    <p style="color:#64748b; font-size:0.9rem; margin-bottom:0.75rem;">ISC2 · Expert</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                        <div>
+                            <span style="color:#64748b; text-decoration:line-through;">₹34,999</span>
+                            <span style="font-weight:700; color:#2563eb; margin-left:8px;">₹36,049</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm">Add to Cart</button>
+                    </div>
+                    <span class="badge badge-commission">Your commission: ₹1,050</span>
+                </div>
+                
+                <!-- CDAC Advanced - FREE -->
+                <div class="wishlist-card card-gem">
+                    <div class="remove-btn">✕</div>
+                    <span style="font-size:2.5rem; display:block; margin-bottom:0.75rem;">🇮🇳</span>
+                    <h3 style="margin-bottom:0.25rem;">Advanced Cybersecurity</h3>
+                    <p style="color:#64748b; font-size:0.9rem; margin-bottom:0.75rem;">CDAC India · FREE</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                        <span style="font-weight:700; color:#10b981;">FREE</span>
+                        <button class="btn btn-success btn-sm">Enroll Free</button>
+                    </div>
+                    <span class="badge badge-gem">💎 Hidden Gem</span>
+                </div>
+            </div>
+            
+            <!-- Savings Summary -->
+            <div style="background:linear-gradient(135deg, #eff6ff, white); border:1px solid #bfdbfe; border-radius:24px; padding:1.5rem; margin-top:2rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <span style="font-size:2.5rem;">💰</span>
+                    <div>
+                        <h3 style="margin-bottom:0.25rem;">Wishlist Savings</h3>
+                        <p style="color:#475569;">If you buy all 4 courses today:</p>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:1.8rem; font-weight:700; color:#2563eb;">₹50,467</div>
+                    <div style="color:#10b981; font-weight:600;">You save ₹3,028</div>
+                    <span class="badge badge-commission" style="margin-top:0.5rem;">Your commission: ₹1,474</span>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

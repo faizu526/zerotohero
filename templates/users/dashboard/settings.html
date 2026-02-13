@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - SETTINGS PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+        
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            list-style: none;
+        }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #475569;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .main-content {
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        
+        .settings-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px #dbeafe;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #334155;
+        }
+        .btn-outline:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        
+        .avatar-upload {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+            cursor: pointer;
+        }
+        .avatar-upload:hover::after {
+            content: '📷';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 26px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .2s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        
+        @media (max-width: 1024px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+    </style>
+    
+    <!-- INLINE JS - SETTINGS PAGE ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Settings page loaded');
+            
+            // Save changes
+            document.querySelectorAll('.settings-card .btn-primary').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('✅ Settings saved! (Demo)\n\nThis is a demo. Backend integration coming soon.');
+                });
+            });
+            
+            // Copy affiliate link
+            const copyBtn = document.querySelector('.btn-outline');
+            if (copyBtn && copyBtn.textContent.includes('Copy')) {
+                copyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const input = this.previousElementSibling;
+                    input.select();
+                    document.execCommand('copy');
+                    
+                    const originalText = this.textContent;
+                    this.textContent = '✓ Copied!';
+                    this.style.background = '#10b981';
+                    this.style.color = 'white';
+                    this.style.border = 'none';
+                    
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.style.background = '';
+                        this.style.color = '';
+                        this.style.border = '2px solid #cbd5e1';
+                    }, 2000);
+                });
+            }
+            
+            // Delete account confirmation
+            const deleteBtn = document.querySelector('.btn-danger');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('⚠️ Are you sure you want to delete your account? This action cannot be undone.')) {
+                        alert('Account deletion requested. (Demo)\n\nThis is a demo. Backend pending.');
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="{% url 'home' %}" class="sidebar-logo">
+                🚀 Zero To <span style="color:#0f172a;">Hero</span>
+            </a>
+            
+            <div style="display:flex; align-items:center; gap:0.75rem; padding:1rem; background:#f8fafc; border-radius:16px; margin-bottom:2rem;">
+                <div style="width:48px; height:48px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👨‍💻</div>
+                <div>
+                    <div style="font-weight:600;">{{ user.first_name|default:user.username }}</div>
+                    <div style="font-size:0.85rem; color:#64748b;">{{ user.email }}</div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard-overview' %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'dashboard-my-courses' %}">📚 My Courses</a></li>
+                <li><a href="{% url 'dashboard-orders' %}">🛒 Orders</a></li>
+                <li><a href="{% url 'dashboard-wishlist' %}">❤️ Wishlist</a></li>
+                <li><a href="{% url 'dashboard-affiliate' %}">💰 Affiliate Earnings</a></li>
+                <li><a href="{% url 'dashboard-settings' %}" class="active">⚙️ Settings</a></li>
+                <li style="margin-top:2rem;"><a href="{% url 'home' %}">← Back to Site</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1 style="font-family:'Caveat'; font-size:2.5rem; margin-bottom:1.5rem;">⚙️ Account Settings</h1>
+            
+            <!-- Profile Settings -->
+            <div class="settings-card">
+                <h3 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                    👤 Profile Information
+                </h3>
+                
+                <div style="display:flex; gap:2rem; align-items:center; margin-bottom:2rem;">
+                    <div class="avatar-upload">👨‍💻</div>
+                    <div>
+                        <button class="btn btn-outline btn-sm">Change Avatar</button>
+                        <p style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">JPG, PNG or GIF. Max 2MB.</p>
+                    </div>
+                </div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">First Name</label>
+                        <input type="text" class="form-control" value="{{ user.first_name }}">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Last Name</label>
+                        <input type="text" class="form-control" value="{{ user.last_name }}">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Email</label>
+                        <input type="email" class="form-control" value="{{ user.email }}">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Phone</label>
+                        <input type="text" class="form-control" value="+91 98765 43210">
+                    </div>
+                </div>
+                
+                <div style="margin-top:1.5rem;">
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+            
+            <!-- Password Settings -->
+            <div class="settings-card">
+                <h3 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                    🔐 Password & Security
+                </h3>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Current Password</label>
+                        <input type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div></div>
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">New Password</label>
+                        <input type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Confirm Password</label>
+                        <input type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <div style="margin-top:1.5rem;">
+                    <button class="btn btn-outline">Update Password</button>
+                </div>
+            </div>
+            
+            <!-- Payment Settings -->
+            <div class="settings-card">
+                <h3 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                    💳 Payment & Commission
+                </h3>
+                
+                <div style="margin-bottom:1.5rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                        <div>
+                            <h4 style="margin-bottom:0.25rem;">Commission Wallet</h4>
+                            <p style="color:#64748b;">Available balance: ₹240</p>
+                        </div>
+                        <button class="btn btn-success">Withdraw Funds</button>
+                    </div>
+                    <div style="background:#f8fafc; border-radius:16px; padding:1rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <span>UPI ID</span>
+                            <span style="font-weight:600;">{{ user.email|slice:":10" }}@okhdfcbank</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Bank Account</span>
+                            <span style="font-weight:600;">HDFC Bank · ****{{ user.id|stringformat:"04d" }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Affiliate Referral Link</label>
+                    <div style="display:flex; gap:0.5rem;">
+                        <input type="text" class="form-control" value="https://zerotohero.com/ref/{{ user.username }}" readonly>
+                        <button class="btn btn-outline">Copy</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Danger Zone -->
+            <div class="settings-card" style="border:1px solid #ef4444;">
+                <h3 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; color:#ef4444;">
+                    ⚠️ Danger Zone
+                </h3>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600;">Delete Account</div>
+                        <p style="font-size:0.9rem; color:#64748b;">Permanently delete your account and all data</p>
+                    </div>
+                    <button class="btn btn-danger">Delete Account</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

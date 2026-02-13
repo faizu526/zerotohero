@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Certifications · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            color: #0f172a;
+            line-height: 1.6;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Navbar (same as above) */
+        .navbar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .logo span { color: #0f172a; }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color: #2563eb; }
+        .nav-buttons { display: flex; gap: 1rem; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .btn-gem { background: #f59e0b; color: white; }
+        .btn-gem:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-primary { background: #dbeafe; color: #1e40af; }
+        
+        /* Cert Cards */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .cert-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: 0.2s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .cert-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+        .cert-card.card-gem {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, white);
+        }
+        .cert-badge {
+            position: absolute;
+            top: -10px;
+            right: 1.5rem;
+            padding: 4px 16px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .cert-free { background: #10b981; color: white; }
+        .cert-paid { background: #2563eb; color: white; }
+        .cert-gem { background: #f59e0b; color: white; }
+        
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        @media (max-width: 1024px) {
+            .cert-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .cert-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Certifications page loaded');
+            
+            document.querySelectorAll('.cert-card .btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const cert = this.closest('.cert-card').querySelector('h3').textContent;
+                    const isFree = this.classList.contains('btn-success');
+                    
+                    if (isFree) {
+                        alert(`🎓 Accessing free certification: ${cert}\n\nYou will be redirected to the official certification page.`);
+                    } else {
+                        alert(`📜 Viewing certification: ${cert}\n\nThis is a demo. Course page will be implemented soon.`);
+                    }
+                });
+            });
+            
+            // Mobile menu (same as above)
+            const mobileBtn = document.createElement('button');
+            mobileBtn.innerHTML = '☰';
+            mobileBtn.style.cssText = 'display:none; background:none; border:none; font-size:1.5rem; cursor:pointer;';
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (window.innerWidth <= 1024) {
+                mobileBtn.style.display = 'block';
+                navbar.insertBefore(mobileBtn, navbar.children[1]);
+                mobileBtn.addEventListener('click', function() {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    mobileBtn.innerHTML = navLinks.style.display === 'flex' ? '✕' : '☰';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
+        <ul class="nav-links" style="display: flex;">
+            <li><a href="{% url 'home' %}">🏠 Home</a></li>
+            <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
+            <li><a href="{% url 'products' %}">📚 Courses</a></li>
+            <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+            <li><a href="{% url 'certifications' %}" class="active">📜 Certifications</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div style="text-align:center; margin:3rem 0 2rem;">
+            <h1 style="font-family:'Caveat'; font-size:4rem;">📜 Free + Paid Certifications</h1>
+            <p style="font-size:1.2rem; color:#475569; max-width:800px; margin:1rem auto;">
+                <strong>40+ free certifications</strong> from Google, Cisco, IBM, Python Institute, UN, CDAC.
+            </p>
+            <div style="display:flex; justify-content:center; gap:2rem; margin:2rem 0; flex-wrap:wrap;">
+                <div><span style="font-size:2rem; font-weight:700; color:#10b981;">40+</span><br>Free Certs</div>
+                <div><span style="font-size:2rem; font-weight:700; color:#2563eb;">60+</span><br>Paid Certs</div>
+                <div><span style="font-size:2rem; font-weight:700; color:#f59e0b;">94%</span><br>Our Price</div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem;">
+            <span class="filter-tag" style="padding:8px 20px; background:#2563eb; color:white; border-radius:9999px;">All</span>
+            <span class="filter-tag" style="padding:8px 20px; background:#f1f5f9; border-radius:9999px; cursor:pointer;">🎯 Free</span>
+            <span class="filter-tag" style="padding:8px 20px; background:#f1f5f9; border-radius:9999px; cursor:pointer;">💰 Paid</span>
+            <span class="filter-tag" style="padding:8px 20px; background:#fef3c7; border-radius:9999px; cursor:pointer;">💎 Hidden Gems</span>
+        </div>
+
+        <div class="cert-grid">
+            <!-- Google Cybersecurity - Free with aid -->
+            <div class="cert-card card-gem">
+                <span class="cert-badge cert-gem">💎 HIDDEN GEM</span>
+                <span style="font-size:2.5rem; margin-bottom:1rem;">📧</span>
+                <h3>Google Cybersecurity Certificate</h3>
+                <p style="color:#475569;">Entry-level SOC analyst certification. Financial aid = 100% free.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-gem">FREE with aid</span>
+                    <span class="badge badge-primary">Beginner</span>
+                </div>
+                <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:700; color:#10b981;">FREE*</span>
+                    <a href="#" class="btn btn-success btn-sm">Apply for Aid →</a>
+                </div>
+            </div>
+            
+            <!-- Cisco Intro to Cyber - FREE -->
+            <div class="cert-card">
+                <span class="cert-badge cert-free">🎯 FREE</span>
+                <span style="font-size:2.5rem; margin-bottom:1rem;">🌐</span>
+                <h3>Introduction to Cybersecurity</h3>
+                <p style="color:#475569;">Free Cisco certification. Industry recognized.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-success">FREE</span>
+                    <span class="badge badge-primary">Beginner</span>
+                </div>
+                <a href="#" class="btn btn-success btn-sm" style="margin-top:auto; align-self:flex-end;">Enroll Free →</a>
+            </div>
+            
+            <!-- Python Institute PCEP - FREE -->
+            <div class="cert-card card-gem">
+                <span class="cert-badge cert-gem">💎 HIDDEN GEM</span>
+                <span style="font-size:2.5rem; margin-bottom:1rem;">🐍</span>
+                <h3>PCEP - Python Certification</h3>
+                <p style="color:#475569;">Official Python certification. Free attempt available.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-gem">FREE</span>
+                    <span class="badge badge-primary">Python</span>
+                </div>
+                <a href="#" class="btn btn-success btn-sm" style="margin-top:auto;">Claim Free →</a>
+            </div>
+            
+            <!-- CDAC India - FREE -->
+            <div class="cert-card card-gem">
+                <span class="cert-badge cert-gem">💎 HIDDEN GEM</span>
+                <span style="font-size:2.5rem; margin-bottom:1rem;">🇮🇳</span>
+                <h3>Certified Ethical Hacking</h3>
+                <p style="color:#475569;">Government of India certification.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-gem">FREE</span>
+                    <span class="badge badge-primary">Govt Cert</span>
+                </div>
+                <a href="#" class="btn btn-success btn-sm">Access Free →</a>
+            </div>
+            
+            <!-- UN CC:Learn - FREE -->
+            <div class="cert-card card-gem">
+                <span class="cert-badge cert-gem">💎 HIDDEN GEM</span>
+                <span style="font-size:2.5rem; margin-bottom:1rem;">🇺🇳</span>
+                <h3>Cybersecurity Fundamentals</h3>
+                <p style="color:#475569;">United Nations certificate.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-gem">FREE</span>
+                    <span class="badge badge-primary">UN Cert</span>
+                </div>
+                <a href="#" class="btn btn-success btn-sm">Enroll Free →</a>
+            </div>
+            
+            <!-- CompTIA Security+ - PAID -->
+            <div class="cert-card">
+                <span class="cert-badge cert-paid">💰 94% Price</span>
+                <span style="font-size:2.5rem; margin-bottom:1rem;">🔐</span>
+                <h3>CompTIA Security+</h3>
+                <p style="color:#475569;">Industry standard cybersecurity certification.</p>
+                <div style="background:#f8fafc; border-radius:16px; padding:0.75rem; margin:1rem 0;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#64748b; text-decoration:line-through;">₹14,999</span>
+                        <span style="font-weight:700; color:#2563eb;">₹15,449</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                        <span>Your commission:</span>
+                        <span style="color:#10b981;">+₹450 (3%)</span>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-primary btn-sm" style="margin-top:auto; align-self:flex-end;">View →</a>
+            </div>
+        </div>
+        
+        <div style="text-align:center; margin:2rem 0;">
+            <span class="badge badge-gem" style="padding:12px 24px; font-size:1rem;">
+                💎 40+ Free Certifications · ₹15,000+ Savings
+            </span>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Zero To Hero · Free certifications directory</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends 'emails/base_email.html' %}
+
+{% block subject %}Order Confirmed! 🎉 #{{ order.id }}{% endblock %}
+
+{% block content %}
+<h2>Thank you for your purchase, {{ user.first_name }}! 🎊</h2>
+
+<p>Your order has been confirmed and you're all set to start learning!</p>
+
+<div class="highlight-box">
+    <strong>✅ Order Status: Confirmed</strong><br>
+    Payment ID: {{ payment_id }}<br>
+    Date: {{ order_date }}
+</div>
+
+<div class="order-details">
+    <h3>📦 Order Summary</h3>
+    <table>
+        {% for item in order_items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>₹{{ item.price }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="border-top: 2px solid #2563eb; font-size: 18px;">
+            <td><strong>Total Paid</strong></td>
+            <td><strong>₹{{ total_amount }}</strong></td>
+        </tr>
+    </table>
+</div>
+
+<h3>🚀 What's Next?</h3>
+<ul>
+    <li>📚 Access your courses in the <a href="{{ my_courses_url }}">My Courses</a> section</li>
+    <li>⏱️ Learn at your own pace - lifetime access included</li>
+    <li>📱 Download mobile apps for learning on-the-go</li>
+    <li>🏆 Earn certificates upon completion</li>
+</ul>
+
+<div style="text-align: center;">
+    <a href="{{ my_courses_url }}" class="btn">Start Learning Now →</a>
+</div>
+
+<h3>💝 Spread the Knowledge!</h3>
+<p>Share your affiliate link and earn <strong>30% commission</strong> on every sale:</p>
+<div class="highlight-box" style="text-align: center;">
+    <code style="font-size: 16px; background: #fff; padding: 10px; border-radius: 4px;">
+        {{ affiliate_link }}
+    </code>
+</div>
+
+<p>Questions? Reply to this email or visit our <a href="{{ support_url }}">Help Center</a>.</p>
+
+<p>Happy learning! 🚀<br>
+<strong>The Zero To Hero Team</strong></p>
+{% endblock %}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Earnings · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - AFFILIATE DASHBOARD PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+        
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            list-style: none;
+        }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #475569;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .main-content {
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        
+        .earnings-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .earnings-card::before {
+            content: '💰';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.1;
+            transform: rotate(-10deg);
+        }
+        
+        .referral-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .commission-table {
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+        .commission-table th {
+            background: #f8fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        .commission-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-commission { background: #dbeafe; color: #1e40af; }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; transform: translateY(-2px); }
+        
+        @media (max-width: 1024px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+    </style>
+    
+    <!-- INLINE JS - AFFILIATE DASHBOARD PAGE ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Affiliate Dashboard loaded');
+            
+            // Withdraw button
+            const withdrawBtn = document.querySelector('.earnings-card .btn');
+            if (withdrawBtn) {
+                withdrawBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('💰 Withdrawal request submitted!\n\nYour available balance of ₹240 will be processed within 2-3 business days.\n\nThis is a demo. Backend integration coming soon.');
+                });
+            }
+            
+            // Copy affiliate link
+            const copyBtn = document.querySelector('.referral-box .btn-primary');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const input = this.previousElementSibling;
+                    input.select();
+                    document.execCommand('copy');
+                    
+                    const originalText = this.textContent;
+                    this.textContent = '✓ Copied!';
+                    this.style.background = '#10b981';
+                    
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.style.background = '#2563eb';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="{% url 'home' %}" class="sidebar-logo">
+                🚀 Zero To <span style="color:#0f172a;">Hero</span>
+            </a>
+            
+            <div style="display:flex; align-items:center; gap:0.75rem; padding:1rem; background:#f8fafc; border-radius:16px; margin-bottom:2rem;">
+                <div style="width:48px; height:48px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👨‍💻</div>
+                <div>
+                    <div style="font-weight:600;">Faizu</div>
+                    <div style="font-size:0.85rem; color:#64748b;">student@zerotohero.com</div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard-overview' %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'dashboard-my-courses' %}">📚 My Courses</a></li>
+                <li><a href="{% url 'dashboard-orders' %}">🛒 Orders</a></li>
+                <li><a href="{% url 'dashboard-wishlist' %}">❤️ Wishlist</a></li>
+                <li><a href="{% url 'dashboard-affiliate' %}" class="active">💰 Affiliate Earnings</a></li>
+                <li><a href="{% url 'dashboard-settings' %}">⚙️ Settings</a></li>
+                <li style="margin-top:2rem;"><a href="{% url 'home' %}">← Back to Site</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                <div>
+                    <h1 style="font-family:'Caveat'; font-size:2.5rem; margin-bottom:0.25rem;">💰 Affiliate Earnings</h1>
+                    <p style="color:#64748b;">Earn 3% commission from 500+ platforms. Stack across multiple purchases.</p>
+                </div>
+                <a href="../affiliate.html" class="btn btn-primary">📊 Affiliate Guide</a>
+            </div>
+            
+            <!-- Earnings Overview -->
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-bottom:2rem;">
+                <div class="earnings-card">
+                    <div style="font-size:0.9rem; opacity:0.9; margin-bottom:0.5rem;">Total Earnings</div>
+                    <div style="font-size:2.5rem; font-weight:700;">₹457</div>
+                    <div style="opacity:0.8; margin-top:0.5rem;">Lifetime</div>
+                </div>
+                
+                <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem;">
+                    <div style="color:#64748b; margin-bottom:0.5rem;">This Month</div>
+                    <div style="font-size:2rem; font-weight:700;">₹129</div>
+                    <div style="color:#10b981; margin-top:0.5rem;">↑ 15%</div>
+                </div>
+                
+                <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem;">
+                    <div style="color:#64748b; margin-bottom:0.5rem;">Pending</div>
+                    <div style="font-size:2rem; font-weight:700;">₹108</div>
+                    <div style="color:#f59e0b; margin-top:0.5rem;">Clears in 14 days</div>
+                </div>
+                
+                <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem;">
+                    <div style="color:#64748b; margin-bottom:0.5rem;">Available</div>
+                    <div style="font-size:2rem; font-weight:700; color:#10b981;">₹240</div>
+                    <button class="btn btn-success btn-sm" style="margin-top:0.75rem;">Withdraw</button>
+                </div>
+            </div>
+            
+            <!-- Referral Link -->
+            <div class="referral-box">
+                <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                    <span style="font-size:2rem;">🔗</span>
+                    <div>
+                        <h4 style="margin-bottom:0.25rem;">Your Affiliate Link</h4>
+                        <p style="color:#475569;">Share this link and earn 3% on every purchase</p>
+                    </div>
+                    <div style="flex:1; display:flex; gap:0.5rem;">
+                        <input type="text" class="form-control" value="https://zerotohero.com/ref/faizu2024" readonly style="flex:1; padding:0.75rem 1rem; border:1px solid #e2e8f0; border-radius:9999px;">
+                        <button class="btn btn-primary">Copy Link</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Commission Breakdown -->
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem; margin-bottom:2rem;">
+                <h3 style="margin-bottom:1.5rem;">📊 Commission Breakdown</h3>
+                
+                <table class="commission-table">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Rate</th>
+                            <th>Sales</th>
+                            <th>Earnings</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TryHackMe</td>
+                            <td>3%</td>
+                            <td>4 sales</td>
+                            <td style="color:#10b981; font-weight:600;">₹120</td>
+                            <td><span class="badge badge-commission">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td>HackTheBox</td>
+                            <td>7%</td>
+                            <td>2 sales</td>
+                            <td style="color:#10b981;">₹432</td>
+                            <td><span style="background:#fef3c7; color:#b45309; padding:4px 12px; border-radius:9999px;">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Udemy</td>
+                            <td>5%</td>
+                            <td>3 sales</td>
+                            <td style="color:#10b981;">₹375</td>
+                            <td><span class="badge badge-commission">Paid</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 3:3:3:3 Explainer -->
+            <div style="background:linear-gradient(135deg, #fef3c7, white); border:1px solid #f59e0b; border-radius:24px; padding:1.5rem;">
+                <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+                    <span style="font-size:3rem;">💰</span>
+                    <div>
+                        <h3 style="margin-bottom:0.5rem;">The 3:3:3:3 Model in Action</h3>
+                        <p style="color:#475569;">You're currently earning from 4 platforms = <strong>12% effective commission rate</strong></p>
+                    </div>
+                    <div style="margin-left:auto; text-align:center;">
+                        <div style="font-size:2rem; font-weight:700; color:#f59e0b;">4/20</div>
+                        <div style="color:#64748b;">platforms active</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

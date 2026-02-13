@@ -1,0 +1,34 @@
+{% extends 'emails/base_email.html' %}
+
+{% block subject %}Welcome to Zero To Hero! 🚀{% endblock %}
+
+{% block content %}
+<h2>Welcome aboard, {{ user.first_name }}! 🎉</h2>
+
+<p>We're thrilled to have you join the <strong>Zero To Hero</strong> community - where learners become leaders!</p>
+
+<div class="highlight-box">
+    <strong>🎯 Your journey starts now!</strong><br>
+    Explore 100+ courses from top platforms like Udemy, Coursera, and more at unbeatable prices.
+</div>
+
+<h3>🚀 Quick Start Guide:</h3>
+<ul>
+    <li>📚 <strong>Browse Courses</strong> - Discover hidden gems and bestsellers</li>
+    <li>💰 <strong>Affiliate Program</strong> - Earn 30% commission on referrals</li>
+    <li>🎓 <strong>Track Progress</strong> - Monitor your learning journey</li>
+    <li>🏆 <strong>Earn Certificates</strong> - Showcase your achievements</li>
+</ul>
+
+<div style="text-align: center;">
+    <a href="{{ dashboard_url }}" class="btn">Go to Dashboard →</a>
+</div>
+
+<h3>💎 What's Next?</h3>
+<p>Check out our <strong>Hidden Gems</strong> section for free premium courses and exclusive deals!</p>
+
+<p>Need help? Reply to this email or contact our support team.</p>
+
+<p>Happy learning! 🚀<br>
+<strong>The Zero To Hero Team</strong></p>
+{% endblock %}

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero To Hero · Home</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - INDEX PAGE ONLY -->
+    <style>
+        /* ===== INDEX.HTML · ZERO TO HERO HOMEPAGE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            color: #0f172a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .logo span {
+            color: #0f172a;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #2563eb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-gem {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-gem:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(245,158,11,0.3);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(239, 246, 255, 0.95), rgba(255, 255, 255, 0.93)),
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            border-radius: 0 0 40px 40px;
+            text-align: center;
+            position: relative;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 0 0 40px 40px;
+            backdrop-filter: blur(2px);
+        }
+        .hero-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Caveat', cursive;
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(30, 58, 138, 0.15);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            font-family: 'Caveat', cursive;
+        }
+
+        .stat-label {
+            color: #64748b;
+        }
+
+        /* Commission Section */
+        .commission-section {
+            background: linear-gradient(135deg, #eff6ff, white);
+            border: 2px solid #bfdbfe;
+            border-radius: 40px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .commission-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .commission-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+
+        .commission-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .commission-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            color: white;
+        }
+
+        .circle-1 { background: #2563eb; }
+        .circle-2 { background: #10b981; }
+        .circle-3 { background: #8b5cf6; }
+        .circle-4 { background: #ec4899; }
+        .circle-profit { background: #f59e0b; }
+        .circle-student { background: #64748b; }
+
+        /* Platform Grid */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .platform-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+
+        .card-gem {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, white);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-commission {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-gem {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: #64748b;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .commission-grid { grid-template-columns: repeat(3, 1fr); }
+            .platform-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 1rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .hero-title { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .commission-grid { grid-template-columns: 1fr; }
+            .platform-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+    
+    <!-- INLINE JS - INDEX PAGE ONLY -->
+    <script>
+        // ===== INDEX.HTML · INTERACTIVITY =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Homepage loaded');
+            
+            // Mobile menu toggle
+            const mobileBtn = document.createElement('button');
+            mobileBtn.className = 'mobile-menu-btn';
+            mobileBtn.innerHTML = '☰';
+            mobileBtn.style.cssText = 'display:none; background:none; border:none; font-size:1.5rem; cursor:pointer;';
+            
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (window.innerWidth <= 1024) {
+                mobileBtn.style.display = 'block';
+                navbar.insertBefore(mobileBtn, navbar.children[1]);
+                
+                mobileBtn.addEventListener('click', function() {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    mobileBtn.innerHTML = navLinks.style.display === 'flex' ? '✕' : '☰';
+                });
+            }
+            
+            // Demo toast
+            setTimeout(() => {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: white;
+                    border-left: 4px solid #2563eb;
+                    border-radius: 8px;
+                    padding: 12px 20px;
+                    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    z-index: 9999;
+                    animation: slideIn 0.3s ease;
+                `;
+                toast.innerHTML = `
+                    <span style="font-size:1.2rem;">🚀</span>
+                    <span style="color:#0f172a;">Welcome to Zero To Hero! Demo mode active.</span>
+                    <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; color:#64748b;">✕</button>
+                `;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => toast.remove(), 4000);
+            }, 1000);
+            
+            // Add animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <!-- Navbar -->
+    {% include 'partials/navbar.html' %}
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Zero To Hero</h1>
+            <h2 class="hero-subtitle">Your Journey Starts Here</h2>
+            <p style="font-size:1.2rem; color:#475569; max-width:800px; margin:0 auto 2rem;">
+                500+ platforms · 1000+ courses · 200+ hidden gems · 94% price to students · 3:3:3:3 profit model
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Global Platforms</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Hidden Gems</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">Student Price</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3:3:3:3</div>
+                    <div class="stat-label">Profit Model</div>
+                </div>
+            </div>
+            
+            <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+                <a href="{% url 'platforms' %}" class="btn btn-primary btn-lg" style="padding:1rem 2.5rem;">🌐 Explore Platforms →</a>
+                <a href="{% url 'hidden-gems' %}" class="btn btn-gem btn-lg" style="padding:1rem 2.5rem;">💎 Discover Hidden Gems</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- 3:3:3:3 Commission Model -->
+        <div class="commission-section">
+            <h2 style="font-family:'Caveat'; font-size:3rem; text-align:center; margin-bottom:1rem;">💰 The 3:3:3:3 Profit Model</h2>
+            <p style="text-align:center; font-size:1.2rem; color:#475569; max-width:800px; margin:0 auto 2rem;">
+                Most platforms take 30-50% commission. We take only 3% from each platform — and multiply across 10+ partners.
+                <br><strong>Students get 94% price. You get more value. We grow together.</strong>
+            </p>
+            
+            <div class="commission-grid">
+                <div class="commission-item">
+                    <div class="commission-circle circle-1">3%</div>
+                    <div style="font-weight:600; margin-top:0.5rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Platform 1</div>
+                    <div style="color:#2563eb; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">TryHackMe</div>
+                </div>
+                <div class="commission-item">
+                    <div class="commission-circle circle-2">3%</div>
+                    <div style="font-weight:600; margin-top:0.5rem;">Platform 2</div>
+                    <div style="color:#10b981; font-weight:700;">Coursera</div>
+                </div>
+                <div class="commission-item">
+                    <div class="commission-circle circle-3">3%</div>
+                    <div style="font-weight:600; margin-top:0.5rem;">Platform 3</div>
+                    <div style="color:#8b5cf6; font-weight:700;">Udemy</div>
+                </div>
+                <div class="commission-item">
+                    <div class="commission-circle circle-4">3%</div>
+                    <div style="font-weight:600; margin-top:0.5rem;">Platform 4</div>
+                    <div style="color:#ec4899; font-weight:700;">HackTheBox</div>
+                </div>
+                <div class="commission-item">
+                    <div class="commission-circle circle-profit">12%</div>
+                    <div style="font-weight:600; margin-top:0.5rem;">Your Profit</div>
+                    <div style="color:#f59e0b; font-weight:700;">4 × 3% = 12%</div>
+                </div>
+                <div class="commission-item">
+                    <div class="commission-circle circle-student">94%</div>
+                    <div style="font-weight:600; margin-top:0.5rem;">Student Price</div>
+                    <div style="color:#64748b; font-weight:700;">You Pay 94%</div>
+                </div>
+            </div>
+            
+            <div style="background:#dbeafe; border-radius:16px; padding:1.5rem; margin-top:2rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                    <span style="font-weight:700; font-size:1.2rem;">📊 Example: ₹1000 Course</span>
+                    <span style="background:#f59e0b; color:white; padding:8px 20px; border-radius:9999px; font-weight:600;">Your Commission: ₹120 (12%)</span>
+                    <span style="background:#10b981; color:white; padding:8px 20px; border-radius:9999px; font-weight:600;">Student Saves: ₹60 (6%)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Platforms -->
+        <div style="margin:3rem 0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                <h2 style="font-family:'Caveat'; font-size:2.5rem;">🌟 Featured Platforms</h2>
+                <a href="{% url 'platforms' %}" class="btn btn-secondary">View All 500+ →</a>
+            </div>
+            
+            <div class="platform-grid">
+                <!-- TryHackMe -->
+                <div class="platform-card">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div style="width:60px; height:60px; border-radius:12px; background:linear-gradient(135deg, #fe5d42, #f29f3a); display:flex; align-items:center; justify-content:center; font-size:2rem; flex-shrink:0;">🔐</div>
+                        <span class="badge badge-commission" style="white-space:nowrap; flex-shrink:0;">3% Commission</span>
+                    </div>
+                    <h3 style="margin:1rem 0 0.5rem; word-break:break-word; overflow-wrap:break-word;">TryHackMe</h3>
+                    <p style="color:#64748b;">Hands-on hacking labs, CTF rooms, learning paths.</p>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                        <span class="badge badge-commission">Beginner</span>
+                        <span class="badge badge-commission">CTF</span>
+                        <span class="badge badge-success">Free Tier</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+                        <span style="font-weight:700; color:#2563eb;">From ₹1,029</span>
+                        <a href="{% url 'platform-single' id=1 %}" class="btn btn-primary btn-sm" style="padding:0.5rem 1.25rem;">View →</a>
+                    </div>
+                </div>
+                
+                <!-- HackTheBox -->
+                <div class="platform-card">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div style="width:60px; height:60px; border-radius:12px; background:linear-gradient(135deg, #1a1a2e, #16213e); display:flex; align-items:center; justify-content:center; font-size:2rem; flex-shrink:0;">🎯</div>
+                        <span class="badge badge-commission" style="background:#ec489920; color:#9d174d; flex-shrink:0;">7% Commission</span>
+                    </div>
+                    <h3 style="margin:1rem 0 0.5rem;">HackTheBox</h3>
+                    <p style="color:#64748b;">Pro-level hacking labs, enterprise training.</p>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                        <span class="badge badge-commission">Advanced</span>
+                        <span class="badge badge-commission">Certification</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+                        <span style="font-weight:700; color:#2563eb;">From ₹3,090</span>
+                        <a href="{% url 'platform-single' id=2 %}" class="btn btn-primary btn-sm">View →</a>
+                    </div>
+                </div>
+                
+                <!-- CDAC India - Hidden Gem -->
+                <div class="platform-card card-gem">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <span style="font-size:3rem;">🇮🇳</span>
+                        <span class="badge badge-gem">💎 HIDDEN GEM</span>
+                    </div>
+                    <h3 style="margin:1rem 0 0.5rem;">CDAC India</h3>
+                    <p style="color:#64748b;">FREE cybersecurity courses from Government of India.</p>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                        <span class="badge badge-gem">FREE</span>
+                        <span class="badge badge-commission">Govt Cert</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+                        <span style="font-weight:700; color:#10b981;">FREE</span>
+                        <a href="{% url 'platform-single' id=3 %}" class="btn btn-success btn-sm">Access →</a>
+                    </div>
+                </div>
+                
+                <!-- UN CC:Learn - Hidden Gem -->
+                <div class="platform-card card-gem">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <span style="font-size:3rem;">🇺🇳</span>
+                        <span class="badge badge-gem">💎 HIDDEN GEM</span>
+                    </div>
+                    <h3 style="margin:1rem 0 0.5rem;">UN CC:Learn</h3>
+                    <p style="color:#64748b;">United Nations free courses. UN certificate.</p>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:1rem 0;">
+                        <span class="badge badge-gem">FREE</span>
+                        <span class="badge badge-commission">UN Cert</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+                        <span style="font-weight:700; color:#10b981;">FREE</span>
+                        <a href="{% url 'platform-single' id=4 %}" class="btn btn-success btn-sm">Access →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Zero To Hero · Built by a student, for students 🇮🇳</p>
+            <div style="display:flex; justify-content:center; gap:2rem; margin-top:1rem; color:#94a3b8; font-size:0.9rem;">
+                <span>TryHackMe</span> · <span>HackTheBox</span> · <span>CDAC India</span> · <span>UN CC:Learn</span> · <span>500+ more</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

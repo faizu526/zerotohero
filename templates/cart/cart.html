@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart · Zero To Hero{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">🛒 Shopping Cart</h1>
+    
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                {% for item in cart_items %}
+                <div class="glass-card p-4 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div style="width:80px; height:80px; background:linear-gradient(135deg, #2563eb, #1d4ed8); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2rem; margin-right:1rem;">
+                            📚
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1">{{ item.product.name }}</h5>
+                            <p class="mb-0 text-muted">{{ item.product.platform.name }}</p>
+                        </div>
+                        <div class="text-end">
+                            <h5 class="mb-1">₹{{ item.item_total }}</h5>
+                            <form method="POST" action="{% url 'update-cart' item.product.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width:60px; padding:0.25rem; border-radius:6px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.1); color:white;">
+                                <button type="submit" class="btn btn-sm btn-outline-light ms-2">Update</button>
+                            </form>
+                            <a href="{% url 'remove-from-cart' item.product.id %}" class="btn btn-sm btn-outline-danger ms-2">🗑️</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="glass-card p-4">
+                    <h4 class="mb-3">Order Summary</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Items ({{ item_count }})</span>
+                        <span>₹{{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Discount</span>
+                        <span class="text-success">-₹0</span>
+                    </div>
+                    <hr style="border-color:rgba(255,255,255,0.2);">
+                    <div class="d-flex justify-content-between mb-4">
+                        <h5>Total</h5>
+                        <h5>₹{{ total }}</h5>
+                    </div>
+                    <a href="{% url 'checkout' %}" class="btn btn-primary w-100 mb-2">Proceed to Checkout →</a>
+                    <a href="{% url 'clear-cart' %}" class="btn btn-outline-light w-100">Clear Cart</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="glass-card p-5 text-center">
+            <div style="font-size:4rem; margin-bottom:1rem;">🛒</div>
+            <h3>Your cart is empty</h3>
+            <p class="mb-4">Browse our courses and add some items!</p>
+            <a href="{% url 'products' %}" class="btn btn-primary">Browse Courses →</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

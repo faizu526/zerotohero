@@ -1,0 +1,45 @@
+# 🚀 Render Deployment Configuration for Zero To Hero
+# Django Project - Free Hosting Setup
+
+services:
+  # Web Service Configuration
+  - type: web
+    name: zerotohero
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: USE_SQLITE
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zerotohero-db
+          property: connectionString
+      - key: WEB_CONCURRENCY
+        value: "4"
+
+  # PostgreSQL Database (Free Tier)
+databases:
+  - name: zerotohero-db
+    databaseName: zerotohero
+    user: zerotohero
+    plan: free
+    ipAllowList: []  # Allow all IPs (required for Render)
+
+# Environment Group (Optional - for shared env vars)
+envVarGroups:
+  - name: zerotohero-settings
+    envVars:
+      - key: RAZORPAY_CURRENCY
+        value: "INR"
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: EMAIL_PORT
+        value: "587"

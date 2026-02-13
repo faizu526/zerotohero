@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing · 94% Model · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - PRICING PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9)),
+                        url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px);
+            z-index: -1;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .logo span { color: #0f172a; }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color: #2563eb; }
+        .nav-buttons { display: flex; gap: 1rem; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #334155;
+        }
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+        }
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .btn-gem { background: #f59e0b; color: white; }
+        .btn-gem:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        .btn-block { width: 100%; display: flex; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-commission { background: #dbeafe; color: #1e40af; }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        
+        /* Pricing Hero */
+        .pricing-hero {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            border-radius: 40px;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        .pricing-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 32px;
+            padding: 2rem;
+            text-align: center;
+            transition: 0.2s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .pricing-card.featured {
+            border-color: #2563eb;
+            box-shadow: 0 20px 25px -5px rgba(37,99,235,0.1);
+            background: linear-gradient(135deg, white, #eff6ff);
+        }
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .pricing-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .pricing-features {
+            list-style: none;
+            margin: 1.5rem 0;
+            flex: 1;
+        }
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        /* Model Explanation */
+        .model-explanation {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 32px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: #f1f5f9;
+            padding: 1rem;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        @media (max-width: 1024px) {
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 1rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+    
+    <!-- INLINE JS - PRICING PAGE ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Pricing page loaded');
+            
+            // Plan selection
+            document.querySelectorAll('.pricing-card .btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const plan = this.closest('.pricing-card').querySelector('.pricing-name, h3').textContent;
+                    alert(`💰 You selected: ${plan}\n\nThis is a demo. Checkout will be implemented soon.`);
+                });
+            });
+            
+            // Mobile menu
+            const mobileBtn = document.createElement('button');
+            mobileBtn.innerHTML = '☰';
+            mobileBtn.style.cssText = 'display:none; background:none; border:none; font-size:1.5rem; cursor:pointer;';
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (window.innerWidth <= 1024) {
+                mobileBtn.style.display = 'block';
+                navbar.insertBefore(mobileBtn, navbar.children[1]);
+                mobileBtn.addEventListener('click', function() {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    mobileBtn.innerHTML = navLinks.style.display === 'flex' ? '✕' : '☰';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
+        <ul class="nav-links" style="display: flex;">
+            <li><a href="{% url 'home' %}">🏠 Home</a></li>
+            <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
+            <li><a href="{% url 'products' %}">📚 Courses</a></li>
+            <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+            <li><a href="{% url 'pricing' %}" class="active">💰 Pricing</a></li>
+            <li><a href="{% url 'roadmap' %}">🛣️ Roadmaps</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="pricing-hero">
+            <h1 style="font-family:'Caveat'; font-size:4rem; color:white; margin-bottom:1rem;">💰 94% Price Model</h1>
+            <p style="font-size:1.3rem; opacity:0.95; max-width:800px; margin:0 auto;">
+                You pay 94% of the original price. Platform gets 97%. We get 3% for free education.
+                <br><strong>Every purchase funds scholarships for students.</strong>
+            </p>
+        </div>
+
+        <!-- Pricing Grid -->
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <div style="font-size:2.5rem; margin-bottom:1rem;">🎯</div>
+                <h3 class="pricing-name">Free Access</h3>
+                <div class="pricing-amount">₹0</div>
+                <ul class="pricing-features">
+                    <li>✅ 200+ hidden gems</li>
+                    <li>✅ 50+ free labs</li>
+                    <li>✅ Course directory</li>
+                    <li>✅ Roadmaps access</li>
+                    <li>❌ No commissions</li>
+                </ul>
+                <a href="{% url 'signup' %}" class="btn btn-outline btn-block">Get Started Free</a>
+            </div>
+            
+            <!-- Single Course -->
+            <div class="pricing-card">
+                <div style="font-size:2.5rem; margin-bottom:1rem;">📚</div>
+                <h3 class="pricing-name">Single Course</h3>
+                <div class="pricing-amount" style="font-size:1.8rem;">94% of market</div>
+                <ul class="pricing-features">
+                    <li>✅ Lifetime access</li>
+                    <li>✅ Certificate included</li>
+                    <li>✅ 3% commission back</li>
+                    <li>✅ Supports free education</li>
+                </ul>
+                <a href="{% url 'products' %}" class="btn btn-primary btn-block">Browse Courses</a>
+            </div>
+            
+            <!-- Monthly Pass -->
+            <div class="pricing-card featured">
+                <span class="pricing-badge">MOST POPULAR</span>
+                <div style="font-size:2.5rem; margin-bottom:1rem;">🌟</div>
+                <h3 class="pricing-name">Monthly Pass</h3>
+                <div>
+                    <span style="color:#64748b; text-decoration:line-through;">₹1,299</span>
+                    <span class="pricing-amount" style="margin-left:0.5rem;">₹970</span>
+                </div>
+                <div style="color:#10b981; font-weight:600; margin-top:0.25rem;">Save ₹329/month</div>
+                <ul class="pricing-features">
+                    <li>✅ 500+ courses</li>
+                    <li>✅ Unlimited labs</li>
+                    <li>✅ Certificates included</li>
+                    <li>✅ 3% from 4+ platforms</li>
+                    <li>✅ Hidden gems access</li>
+                </ul>
+                <a href="{% url 'checkout' %}" class="btn btn-primary btn-block">Start Monthly Pass</a>
+                <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem;">Your commission: ₹30/month</p>
+            </div>
+            
+            <!-- Yearly Pass -->
+            <div class="pricing-card">
+                <div style="font-size:2.5rem; margin-bottom:1rem;">📅</div>
+                <h3 class="pricing-name">Yearly Pass</h3>
+                <div>
+                    <span style="color:#64748b; text-decoration:line-through;">₹11,880</span>
+                    <span class="pricing-amount" style="margin-left:0.5rem;">₹9,700</span>
+                </div>
+                <div style="color:#10b981; font-weight:600; margin-top:0.25rem;">Save ₹2,180/year</div>
+                <ul class="pricing-features">
+                    <li>✅ Everything in Monthly</li>
+                    <li>✅ 2 months free</li>
+                    <li>✅ Early access to gems</li>
+                    <li>✅ 5% commission rate</li>
+                </ul>
+                <a href="{% url 'checkout' %}" class="btn btn-outline btn-block">Start Yearly Pass</a>
+                <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem;">Your commission: ₹485/year</p>
+            </div>
+        </div>
+
+        <!-- Commission Breakdown -->
+        <div class="model-explanation">
+            <h2 style="font-family:'Caveat'; font-size:2.5rem; text-align:center; margin-bottom:2rem;">📊 Where Your Money Goes</h2>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; text-align:center; margin-bottom:2rem;">
+                <div>
+                    <div style="font-size:3rem; font-weight:700; color:#2563eb;">94%</div>
+                    <div style="font-weight:600;">To Platform</div>
+                    <p style="color:#64748b;">Course creators, platform costs</p>
+                </div>
+                <div>
+                    <div style="font-size:3rem; font-weight:700; color:#10b981;">3%</div>
+                    <div style="font-weight:600;">Free Education Fund</div>
+                    <p style="color:#64748b;">Scholarships, hidden gems</p>
+                </div>
+                <div>
+                    <div style="font-size:3rem; font-weight:700; color:#f59e0b;">3%</div>
+                    <div style="font-weight:600;">Your Commission</div>
+                    <p style="color:#64748b;">Cashback, affiliate earnings</p>
+                </div>
+            </div>
+            <div style="background:#dbeafe; border-radius:12px; padding:1rem; text-align:center;">
+                <span style="font-weight:600;">Example:</span> ₹1,000 course → ₹970 to platform, ₹30 to free education, ₹30 to you
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <h2 style="font-family:'Caveat'; font-size:2.5rem; text-align:center; margin:2rem 0;">💎 Zero To Hero vs Others</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr><th>Platform</th><th>Your Price</th><th>Commission</th><th>Free Education</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Zero To Hero</strong></td>
+                    <td><span style="font-weight:700; color:#10b981;">94%</span> of market</td>
+                    <td><span style="font-weight:700;">3% cashback</span></td>
+                    <td>✅ 3% to scholarships</td>
+                </tr>
+                <tr>
+                    <td>Typical Affiliate</td>
+                    <td>100% of market</td>
+                    <td>5-10% (no cashback)</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td>Direct Purchase</td>
+                    <td>100% of market</td>
+                    <td>0%</td>
+                    <td>❌ No</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="text-align:center; margin:2rem 0;">
+            <span class="badge badge-success" style="padding:12px 24px; font-size:1rem;">
+                🎯 Only platform that gives you cashback AND funds free education
+            </span>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Zero To Hero · 94% Price Model · 3:3:3:3 Profit Sharing</p>
+        </div>
+    </footer>
+</body>
+</html>

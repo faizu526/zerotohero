@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Roadmaps · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9)),
+                        url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px);
+            z-index: -1;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Navbar (same as above) */
+        .navbar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .logo span { color: #0f172a; }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color: #2563eb; }
+        .nav-buttons { display: flex; gap: 1rem; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #334155;
+        }
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+        }
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-block { width: 100%; display: flex; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-primary { background: #dbeafe; color: #1e40af; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        
+        /* Roadmap Cards */
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .roadmap-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 32px;
+            padding: 2rem;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .roadmap-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+        .roadmap-card::before {
+            content: '🛣️';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.05;
+            transform: rotate(-10deg);
+        }
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .difficulty-beginner { background: #d1fae5; color: #065f46; }
+        .difficulty-intermediate { background: #fef3c7; color: #b45309; }
+        
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        @media (max-width: 1024px) {
+            .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 1rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .roadmap-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Roadmaps page loaded');
+            
+            document.querySelectorAll('.roadmap-card .btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const path = this.closest('.roadmap-card').querySelector('h2').textContent;
+                    alert(`🛣️ Opening roadmap: ${path}\n\nThis is a demo. Full roadmap page will be implemented soon.`);
+                });
+            });
+            
+            // Mobile menu
+            const mobileBtn = document.createElement('button');
+            mobileBtn.innerHTML = '☰';
+            mobileBtn.style.cssText = 'display:none; background:none; border:none; font-size:1.5rem; cursor:pointer;';
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (window.innerWidth <= 1024) {
+                mobileBtn.style.display = 'block';
+                navbar.insertBefore(mobileBtn, navbar.children[1]);
+                mobileBtn.addEventListener('click', function() {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    mobileBtn.innerHTML = navLinks.style.display === 'flex' ? '✕' : '☰';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
+        <ul class="nav-links" style="display: flex;">
+            <li><a href="{% url 'home' %}">🏠 Home</a></li>
+            <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
+            <li><a href="{% url 'products' %}">📚 Courses</a></li>
+            <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+            <li><a href="{% url 'pricing' %}">💰 Pricing</a></li>
+            <li><a href="{% url 'roadmap' %}" class="active">🛣️ Roadmaps</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div style="text-align:center; margin:3rem 0 2rem;">
+            <h1 style="font-family:'Caveat'; font-size:4rem;">🛣️ Learning Roadmaps</h1>
+            <p style="font-size:1.3rem; color:#475569; max-width:800px; margin:1rem auto;">
+                Not sure where to start? Follow these step-by-step paths. 
+                <strong>Every resource is free or 94% priced.</strong>
+            </p>
+        </div>
+
+        <div class="roadmap-grid">
+            <!-- Ethical Hacking -->
+            <div class="roadmap-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:3rem;">🔐</span>
+                    <span class="difficulty-badge difficulty-beginner">Beginner</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Ethical Hacking</h2>
+                <p style="color:#475569;">From zero to professional penetration tester.</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-primary">6-9 months</span>
+                    <span class="badge badge-success">100% free options</span>
+                    <span class="badge badge-gem">12 hidden gems</span>
+                </div>
+                <div style="margin:1rem 0;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span style="color:#10b981;">✓</span> Phase 1: Networking + Linux
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span style="color:#10b981;">✓</span> Phase 2: Python for Security
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="color:#10b981;">✓</span> Phase 3: Web Security
+                    </div>
+                </div>
+                <a href="roadmap-single.html" class="btn btn-primary btn-block" style="margin-top:auto;">View Roadmap →</a>
+            </div>
+            
+            <!-- Python Developer -->
+            <div class="roadmap-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:3rem;">🐍</span>
+                    <span class="difficulty-badge difficulty-beginner">Beginner</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Python Developer</h2>
+                <p style="color:#475569;">Learn Python from basics to automation.</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-primary">4-6 months</span>
+                    <span class="badge badge-success">100% free options</span>
+                    <span class="badge badge-gem">8 hidden gems</span>
+                </div>
+                <div style="margin:1rem 0;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span style="color:#10b981;">✓</span> Phase 1: Python Basics
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span style="color:#10b981;">✓</span> Phase 2: OOP + Scripting
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="color:#10b981;">✓</span> Phase 3: Django/Flask
+                    </div>
+                </div>
+                <a href="roadmap-single.html" class="btn btn-primary btn-block">View Roadmap →</a>
+            </div>
+            
+            <!-- Web Developer -->
+            <div class="roadmap-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:3rem;">🌐</span>
+                    <span class="difficulty-badge difficulty-beginner">Beginner</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Web Developer</h2>
+                <p style="color:#475569;">HTML, CSS, JavaScript, React, Node.js.</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-primary">6-8 months</span>
+                    <span class="badge badge-success">100% free options</span>
+                    <span class="badge badge-gem">15 hidden gems</span>
+                </div>
+                <div style="margin:1rem 0;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span style="color:#10b981;">✓</span> Phase 1: HTML/CSS
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                        <span style="color:#10b981;">✓</span> Phase 2: JavaScript
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="color:#10b981;">✓</span> Phase 3: React
+                    </div>
+                </div>
+                <a href="roadmap-single.html" class="btn btn-primary btn-block">View Roadmap →</a>
+            </div>
+            
+            <!-- Bug Bounty -->
+            <div class="roadmap-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:3rem;">💰</span>
+                    <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Bug Bounty Hunter</h2>
+                <p style="color:#475569;">Find vulnerabilities, earn rewards.</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-primary">8-12 months</span>
+                    <span class="badge badge-gem">20+ platforms</span>
+                </div>
+                <a href="roadmap-single.html" class="btn btn-outline btn-block" style="margin-top:auto;">View Roadmap →</a>
+            </div>
+            
+            <!-- Cloud & DevOps -->
+            <div class="roadmap-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:3rem;">☁️</span>
+                    <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Cloud & DevOps</h2>
+                <p style="color:#475569;">AWS, Docker, Kubernetes, CI/CD.</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-primary">6-9 months</span>
+                    <span class="badge badge-gem">10+ free labs</span>
+                </div>
+                <a href="roadmap-single.html" class="btn btn-outline btn-block">View Roadmap →</a>
+            </div>
+            
+            <!-- SOC Analyst -->
+            <div class="roadmap-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:3rem;">🛡️</span>
+                    <span class="difficulty-badge difficulty-beginner">Beginner</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">SOC Analyst</h2>
+                <p style="color:#475569;">Security operations, threat monitoring.</p>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+                    <span class="badge badge-primary">4-6 months</span>
+                    <span class="badge badge-success">Free certs</span>
+                </div>
+                <a href="roadmap-single.html" class="btn btn-outline btn-block">View Roadmap →</a>
+            </div>
+        </div>
+        
+        <div style="background:#eff6ff; border-radius:40px; padding:3rem; margin:3rem 0; text-align:center;">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:2rem;">
+                <div><div style="font-size:3rem; font-weight:700; color:#2563eb;">6</div><div>Career Paths</div></div>
+                <div><div style="font-size:3rem; font-weight:700; color:#2563eb;">100+</div><div>Curated Resources</div></div>
+                <div><div style="font-size:3rem; font-weight:700; color:#2563eb;">80%</div><div>Free Resources</div></div>
+                <div><div style="font-size:3rem; font-weight:700; color:#2563eb;">94%</div><div>Paid Courses</div></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Zero To Hero · Clear paths from zero to job ready</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Zero To Hero{% endblock %}
+{% block meta_description %}Secure payment checkout for your courses. Pay with Razorpay - India's leading payment gateway.{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="mb-3">🔒 Secure Checkout</h2>
+                    <p class="text-white-50">Complete your purchase securely with Razorpay</p>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="glass p-3 mb-4">
+                    <h5 class="mb-3">📦 Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>₹{{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax (18% GST):</span>
+                        <span>₹{{ total|floatformat:2 }}</span>
+                    </div>
+                    <hr class="border-light">
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total:</span>
+                        <span class="text-primary">₹{{ total }}</span>
+                    </div>
+                </div>
+
+                <!-- Payment Button -->
+                <div class="text-center">
+                    <button id="rzp-button" class="glass-btn btn-lg w-100">
+                        💳 Pay ₹{{ total }} with Razorpay
+                    </button>
+                    <p class="mt-3 text-white-50 small">
+                        🔐 Secured by Razorpay | 256-bit SSL Encryption
+                    </p>
+                </div>
+
+                <!-- Back to Cart -->
+                <div class="text-center mt-3">
+                    <a href="{% url 'cart' %}" class="text-white-50 text-decoration-none">
+                        ← Back to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('rzp-button').onclick = function(e) {
+    e.preventDefault();
+    
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ razorpay_amount }}",
+        "currency": "{{ razorpay_currency }}",
+        "name": "Zero To Hero",
+        "description": "Course Purchase",
+        "order_id": "{{ razorpay_order_id }}",
+        "prefill": {
+            "name": "{{ user_name }}",
+            "email": "{{ user_email }}",
+            "contact": ""
+        },
+        "theme": {
+            "color": "#2563eb"
+        },
+        "handler": function (response) {
+            // Verify payment on server
+            fetch('/payments/razorpay/verify/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = '/payments/success/';
+                } else {
+                    alert('Payment verification failed: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred during payment verification.');
+            });
+        },
+        "modal": {
+            "ondismiss": function() {
+                console.log('Payment modal closed');
+            }
+        }
+    };
+    
+    var rzp = new Razorpay(options);
+    rzp.open();
+};
+</script>
+{% endblock %}

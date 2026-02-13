@@ -1,0 +1,369 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- INLINE CSS - MY COURSES PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+        
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            list-style: none;
+        }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #475569;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .course-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+        .card-gem {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, white);
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #f1f5f9;
+            text-decoration: none;
+            color: #475569;
+        }
+        .filter-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-commission { background: #dbeafe; color: #1e40af; }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .alert-error {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 2px solid #ef4444;
+            color: #dc2626;
+            font-weight: 600;
+        }
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 8px;
+            border-radius: 9999px;
+        }
+        .progress-fill-blue { background: #2563eb; }
+        .progress-fill-green { background: #10b981; }
+        .progress-fill-orange { background: #f59e0b; }
+        
+        @media (max-width: 1024px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .course-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .course-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="{% url 'home' %}" class="sidebar-logo">
+                🚀 Zero To <span style="color:#0f172a;">Hero</span>
+            </a>
+            
+            <div style="display:flex; align-items:center; gap:0.75rem; padding:1rem; background:#f8fafc; border-radius:16px; margin-bottom:2rem;">
+                <div style="width:48px; height:48px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👨‍💻</div>
+                <div>
+                    <div style="font-weight:600;">{{ user.first_name|default:user.username }}</div>
+                    <div style="font-size:0.85rem; color:#64748b;">{{ user.email }}</div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard-overview' %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'dashboard-my-courses' %}" class="active">📚 My Courses</a></li>
+                <li><a href="{% url 'dashboard-orders' %}">🛒 Orders</a></li>
+                <li><a href="{% url 'dashboard-wishlist' %}">❤️ Wishlist</a></li>
+                <li><a href="{% url 'dashboard-affiliate' %}">💰 Affiliate Earnings</a></li>
+                <li><a href="{% url 'dashboard-settings' %}">⚙️ Settings</a></li>
+                <li style="margin-top:2rem;"><a href="{% url 'home' %}">← Back to Site</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-error">
+                            <span style="font-size:1.2rem; margin-right:0.5rem;">⚠️</span>
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            
+            <!-- Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                <div>
+                    <h1 style="font-family:'Caveat'; font-size:2.5rem; margin-bottom:0.25rem;">📚 My Courses</h1>
+                    <p style="color:#64748b;">{{ total_courses }} enrolled courses · {{ in_progress }} in progress · {{ completed }} completed</p>
+                </div>
+                <a href="{% url 'products' %}" class="btn btn-primary" style="padding:0.75rem 1.5rem;">
+                    ➕ Browse More Courses
+                </a>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <a href="{% url 'dashboard-my-courses' %}" class="filter-tab {% if status_filter == 'all' %}active{% endif %}">All Courses ({{ total_courses }})</a>
+                <a href="{% url 'dashboard-my-courses' %}?status=in_progress" class="filter-tab {% if status_filter == 'in_progress' %}active{% endif %}">In Progress ({{ in_progress }})</a>
+                <a href="{% url 'dashboard-my-courses' %}?status=completed" class="filter-tab {% if status_filter == 'completed' %}active{% endif %}">Completed ({{ completed }})</a>
+                <a href="{% url 'dashboard-my-courses' %}?status=certificates" class="filter-tab {% if status_filter == 'certificates' %}active{% endif %}">Certificates ({{ certificates }})</a>
+            </div>
+            
+            <!-- Course Grid -->
+            <div class="course-grid">
+                {% for course in courses %}
+                <div class="course-card {% if course.status == 'completed' %}card-gem{% endif %}">
+                    <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                        <span style="font-size:2.5rem;">
+                            {% if 'Python' in course.name %}🐍
+                            {% elif 'Security' in course.name or 'Hacking' in course.name %}🔐
+                            {% elif 'Web' in course.name %}🌐
+                            {% elif 'Linux' in course.name %}🐧
+                            {% else %}📚{% endif %}
+                        </span>
+                        {% if course.certificate_issued %}
+                            <span class="badge badge-success">✅ Certified</span>
+                        {% elif course.status == 'completed' %}
+                            <span class="badge badge-gem">Completed</span>
+                        {% else %}
+                            <span class="badge badge-commission">In Progress</span>
+                        {% endif %}
+                    </div>
+                    <h3 style="margin-bottom:0.25rem;">{{ course.name }}</h3>
+                    <p style="color:#64748b; font-size:0.9rem; margin-bottom:0.5rem;">{{ course.platform }}</p>
+                    <div style="margin-bottom:1rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                            <span style="font-size:0.9rem;">Progress</span>
+                            <span style="font-weight:600; 
+                                {% if course.progress >= 70 %}color:#10b981;
+                                {% elif course.progress >= 40 %}color:#f59e0b;
+                                {% else %}color:#2563eb;{% endif %}">
+                                {{ course.progress }}%
+                            </span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill 
+                                {% if course.progress >= 70 %}progress-fill-green
+                                {% elif course.progress >= 40 %}progress-fill-orange
+                                {% else %}progress-fill-blue{% endif %}" 
+                                style="width: {{ course.progress }}%;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+                        <span style="font-size:0.9rem; color:#64748b;">
+                            {% if course.status == 'completed' %}✅ Finished
+                            {% elif course.status == 'in_progress' %}▶️ Continue learning
+                            {% else %}🚀 Start course{% endif %}
+                        </span>
+                        <a href="#" class="btn {% if course.status == 'completed' %}btn-success{% else %}btn-primary{% endif %}">
+                            {% if course.status == 'completed' %}Review →{% else %}Continue →{% endif %}
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="grid-column:1/-1; text-align:center; padding:3rem; color:#64748b;">
+                    <div style="font-size:4rem; margin-bottom:1rem;">📚</div>
+                    <h3>No courses found</h3>
+                    <p>Start learning by enrolling in your first course!</p>
+                    <a href="{% url 'products' %}" class="btn btn-primary" style="margin-top:1rem;">Browse Courses</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Certificates Section -->
+            {% if certificates > 0 %}
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem; margin-top:2rem;">
+                <h3 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                    📜 Your Certificates ({{ certificates }})
+                </h3>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+                    {% for course in courses %}
+                    {% if course.certificate_issued %}
+                    <div style="display:flex; align-items:center; gap:0.75rem; padding:1rem; background:#f8fafc; border-radius:16px;">
+                        <span style="font-size:2rem;">
+                            {% if 'Python' in course.name %}🐍
+                            {% elif 'Security' in course.name or 'Hacking' in course.name %}🔐
+                            {% elif 'Web' in course.name %}🌐
+                            {% else %}📜{% endif %}
+                        </span>
+                        <div>
+                            <div style="font-weight:600;">{{ course.name }}</div>
+                            <p style="font-size:0.85rem; color:#64748b;">Completed {{ course.completed_at|date:"M Y"|default:"Recently" }}</p>
+                        </div>
+                        <a href="#" style="margin-left:auto; color:#2563eb;">↓</a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

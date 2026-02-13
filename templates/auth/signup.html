@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- INLINE CSS - SIGNUP PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9)),
+                        url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px);
+            z-index: -1;
+        }
+        
+        .auth-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 32px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .auth-card::before {
+            content: '🚀✨';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.05;
+            transform: rotate(-10deg);
+        }
+        
+        .auth-logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px #dbeafe;
+        }
+        .form-control.is-invalid {
+            border-color: #ef4444;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #334155;
+        }
+        .btn-outline:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        .benefits-list {
+            background: #d1fae5;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #a7f3d0;
+            list-style: none;
+        }
+        .benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            color: #065f46;
+        }
+        
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #64748b;
+            margin: 1.5rem 0;
+        }
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .auth-divider span { margin: 0 0.5rem; }
+        
+        .invalid-feedback {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .alert-error {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 2px solid #ef4444;
+            color: #dc2626;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div style="text-align:center;">
+            <a href="{% url 'home' %}" class="auth-logo">
+                🚀 Zero To <span style="color:#0f172a;">Hero</span>
+            </a>
+            <h1 style="font-size:1.8rem; margin-bottom:0.25rem;">Create Free Account</h1>
+            <p style="color:#475569; margin-bottom:1.5rem;">Join 50,000+ students learning on 94% price</p>
+        </div>
+        
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-error">
+                        <span style="font-size:1.2rem; margin-right:0.5rem;">⚠️</span>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Benefits -->
+        <ul class="benefits-list">
+            <li><span style="color:#10b981;">✅</span> Access to 200+ hidden gems — free</li>
+            <li><span style="color:#10b981;">✅</span> 3% commission on every purchase</li>
+            <li><span style="color:#10b981;">✅</span> Bookmark courses & track progress</li>
+            <li><span style="color:#10b981;">✅</span> Lifetime free account — no CC required</li>
+        </ul>
+        
+        <!-- Signup Form -->
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:0.5rem;">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control"
+                           placeholder="Aarav" required>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control"
+                           placeholder="Sharma" required>
+                </div>
+            </div>
+            
+            <div style="margin-bottom:1rem;">
+                <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Email</label>
+                <input type="email" id="email" name="email" class="form-control" 
+                       placeholder="student@example.com" required 
+                       value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                {% if form.email.errors %}
+                    <div class="invalid-feedback">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div style="margin-bottom:1rem;">
+                <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Password</label>
+                <input type="password" id="password" name="password" class="form-control" 
+                       placeholder="Create a strong password" required>
+                {% if form.password.errors %}
+                    <div class="invalid-feedback">{{ form.password.errors }}</div>
+                {% endif %}
+                <p style="font-size:0.8rem; color:#64748b; margin-top:0.25rem;">Minimum 8 characters</p>
+            </div>
+            
+            <div style="margin-bottom:1.5rem;">
+                <label style="display:block; font-weight:600; margin-bottom:0.5rem;">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" 
+                       placeholder="••••••••" required>
+                {% if form.confirm_password.errors %}
+                    <div class="invalid-feedback">{{ form.confirm_password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div style="margin-bottom:1.5rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <input type="checkbox" id="terms" name="terms" required style="width:18px; height:18px;">
+                    <label for="terms" style="color:#475569;">
+                        I agree to the <a href="#" style="color:#2563eb;">Terms of Service</a> and <a href="#" style="color:#2563eb;">Privacy Policy</a>
+                    </label>
+                </div>
+                {% if form.terms.errors %}
+                    <div class="invalid-feedback">{{ form.terms.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i style="font-style:normal;">✨</i> Create Free Account
+            </button>
+        </form>
+        
+        <div class="auth-divider">
+            <span>OR SIGN UP WITH</span>
+        </div>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1.5rem;">
+            <button class="btn btn-outline">
+                <span style="font-size:1.2rem;">📧</span> Google
+            </button>
+            <button class="btn btn-outline">
+                <span style="font-size:1.2rem;">🐦</span> Twitter
+            </button>
+        </div>
+        
+        <div style="background:#fef3c7; border-radius:16px; padding:1rem; border:1px solid #f59e0b;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                <span style="background:#f59e0b; color:white; padding:4px 12px; border-radius:9999px; font-size:0.75rem; font-weight:600;">💎 FREE FOREVER</span>
+            </div>
+            <p style="margin:0; font-size:0.95rem; color:#b45309;">
+                No credit card required. No "7-day trial". Just free access to 200+ hidden gems.
+            </p>
+        </div>
+        
+        <p style="text-align:center; margin-top:1.5rem; color:#475569;">
+            Already have an account? 
+            <a href="{% url 'login' %}" style="font-weight:600; color:#2563eb;">Sign in →</a>
+        </p>
+    </div>
+</body>
+</html>

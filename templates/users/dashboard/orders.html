@@ -1,0 +1,351 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- INLINE CSS - ORDERS PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+        
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            list-style: none;
+        }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #475569;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .main-content {
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        
+        .orders-table {
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            border-collapse: collapse;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .orders-table th {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+        .orders-table tr:last-child td { border-bottom: none; }
+        .orders-table tr:hover td {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            transition: background 0.2s ease;
+        }
+        .orders-table tr:nth-child(even) { background: #fafbfc; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-completed { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #b45309; }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .alert-error {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 2px solid #ef4444;
+            color: #dc2626;
+            font-weight: 600;
+        }
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); }
+        
+        @media (max-width: 1024px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .orders-table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="{% url 'home' %}" class="sidebar-logo">
+                🚀 Zero To <span style="color:#0f172a;">Hero</span>
+            </a>
+            
+            <div style="display:flex; align-items:center; gap:0.75rem; padding:1rem; background:#f8fafc; border-radius:16px; margin-bottom:2rem;">
+                <div style="width:48px; height:48px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👨‍💻</div>
+                <div>
+                    <div style="font-weight:600;">{{ user.first_name|default:user.username }}</div>
+                    <div style="font-size:0.85rem; color:#64748b;">{{ user.email }}</div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard-overview' %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'dashboard-my-courses' %}">📚 My Courses</a></li>
+                <li><a href="{% url 'dashboard-orders' %}" class="active">🛒 Orders</a></li>
+                <li><a href="{% url 'dashboard-wishlist' %}">❤️ Wishlist</a></li>
+                <li><a href="{% url 'dashboard-affiliate' %}">💰 Affiliate Earnings</a></li>
+                <li><a href="{% url 'dashboard-settings' %}">⚙️ Settings</a></li>
+                <li style="margin-top:2rem;"><a href="{% url 'home' %}">← Back to Site</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-error">
+                            <span style="font-size:1.2rem; margin-right:0.5rem;">⚠️</span>
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            
+            <!-- Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+                <div>
+                    <h1 style="font-family:'Caveat'; font-size:2.5rem; margin-bottom:0.25rem;">🛒 Order History</h1>
+                    <p style="color:#64748b;">{{ orders|length }} orders · Total spent: ₹{{ total_spent|floatformat:0 }} · Commission earned: ₹{{ commission_earned|floatformat:0 }}</p>
+                </div>
+            </div>
+            
+            <!-- Search & Filters -->
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem; margin-bottom:2rem;">
+                <form method="GET" action="{% url 'dashboard-orders' %}" style="display:flex; flex-direction:column; gap:1rem;">
+                    <!-- Search Bar -->
+                    <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                        <div style="flex:1; min-width:250px; position:relative;">
+                            <span style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:1.2rem;">🔍</span>
+                            <input type="text" name="search" value="{{ search_query }}" placeholder="Search by Order ID, Course, or Platform..." 
+                                style="width:100%; padding:0.75rem 1rem 0.75rem 2.5rem; border:1px solid #e2e8f0; border-radius:9999px; font-size:0.95rem;">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="padding:0.75rem 1.5rem;">Search</button>
+                        {% if search_query or status_filter or date_from or date_to %}
+                        <a href="{% url 'dashboard-orders' %}" class="btn" style="background:#f1f5f9; color:#475569; padding:0.75rem 1.5rem;">Clear</a>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Filters Row -->
+                    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+                        <!-- Status Filter -->
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <label style="font-weight:500; color:#64748b; font-size:0.9rem;">Status:</label>
+                            <select name="status" style="padding:0.5rem 1rem; border:1px solid #e2e8f0; border-radius:9999px; background:white; font-size:0.9rem;">
+                                <option value="">All Status</option>
+                                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>✅ Completed</option>
+                                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>⏳ Pending</option>
+                                <option value="processing" {% if status_filter == 'processing' %}selected{% endif %}>🔄 Processing</option>
+                                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>❌ Cancelled</option>
+                                <option value="refunded" {% if status_filter == 'refunded' %}selected{% endif %}>↩️ Refunded</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Date Range -->
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <label style="font-weight:500; color:#64748b; font-size:0.9rem;">From:</label>
+                            <input type="date" name="date_from" value="{{ date_from }}" style="padding:0.5rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem;">
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <label style="font-weight:500; color:#64748b; font-size:0.9rem;">To:</label>
+                            <input type="date" name="date_to" value="{{ date_to }}" style="padding:0.5rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem;">
+                        </div>
+                        
+                        <!-- Sort By -->
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-left:auto;">
+                            <label style="font-weight:500; color:#64748b; font-size:0.9rem;">Sort:</label>
+                            <select name="sort" style="padding:0.5rem 1rem; border:1px solid #e2e8f0; border-radius:9999px; background:white; font-size:0.9rem;">
+                                <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
+                                <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest First</option>
+                                <option value="-amount" {% if sort_by == '-amount' %}selected{% endif %}>Amount (High-Low)</option>
+                                <option value="amount" {% if sort_by == 'amount' %}selected{% endif %}>Amount (Low-High)</option>
+                                <option value="course_name" {% if sort_by == 'course_name' %}selected{% endif %}>Course Name</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Orders Table -->
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1rem;">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Course</th>
+                            <th>Platform</th>
+                            <th>Amount</th>
+                            <th>Commission</th>
+                            <th>Status</th>
+                            <th>Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><span style="font-weight:600;">#{{ order.order_id }}</span></td>
+                            <td>{{ order.created_at|date:"d M Y" }}</td>
+                            <td>{{ order.course_name }}</td>
+                            <td>{{ order.platform }}</td>
+                            <td>₹{{ order.amount|floatformat:0 }}</td>
+                            <td style="color:#10b981; font-weight:600;">+₹{{ order.commission|floatformat:0 }}</td>
+                            <td>
+                                {% if order.status == 'completed' %}
+                                    <span class="status-badge status-completed">Completed</span>
+                                {% elif order.status == 'pending' %}
+                                    <span class="status-badge status-pending">Pending</span>
+                                {% elif order.status == 'cancelled' %}
+                                    <span class="status-badge" style="background:#fee2e2; color:#991b1b;">Cancelled</span>
+                                {% elif order.status == 'refunded' %}
+                                    <span class="status-badge" style="background:#f3f4f6; color:#374151;">Refunded</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="#" style="color:#2563eb;">PDF</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" style="padding:3rem; text-align:center; color:#64748b;">
+                                <div style="font-size:3rem; margin-bottom:1rem;">🛒</div>
+                                <h3 style="margin-bottom:0.5rem;">No orders yet</h3>
+                                <p>Start shopping to see your orders here!</p>
+                                <a href="{% url 'products' %}" class="btn btn-primary" style="margin-top:1rem; display:inline-block;">Browse Courses</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
+                    <span style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; background:#2563eb; color:white; border-radius:8px;">1</span>
+                    <span style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px;">2</span>
+                    <span style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px;">3</span>
+                    <span style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px;">→</span>
+                </div>
+            </div>
+            
+            <!-- Spending Summary -->
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2rem;">
+                <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem;">
+                    <span style="font-size:2rem;">💰</span>
+                    <h3 style="margin:0.5rem 0 0.25rem;">Total Spent</h3>
+                    <p style="font-size:1.8rem; font-weight:700; color:#2563eb;">₹{{ total_spent|floatformat:2 }}</p>
+                </div>
+                <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem;">
+                    <span style="font-size:2rem;">🎯</span>
+                    <h3 style="margin:0.5rem 0 0.25rem;">Total Saved</h3>
+                    <p style="font-size:1.8rem; font-weight:700; color:#10b981;">₹{{ total_saved|floatformat:2 }}</p>
+                </div>
+                <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:1.5rem;">
+                    <span style="font-size:2rem;">📊</span>
+                    <h3 style="margin:0.5rem 0 0.25rem;">Commission Earned</h3>
+                    <p style="font-size:1.8rem; font-weight:700; color:#f59e0b;">₹{{ commission_earned|floatformat:2 }}</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

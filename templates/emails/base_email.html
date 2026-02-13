@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block subject %}{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .email-header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .email-header .logo {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .email-body {
+            padding: 30px;
+            color: #334155;
+        }
+        .email-footer {
+            background-color: #f1f5f9;
+            padding: 20px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .order-details {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .order-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .order-details td {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .order-details td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-header">
+            <div class="logo">🚀</div>
+            <h1>Zero To Hero</h1>
+        </div>
+        
+        <div class="email-body">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <div class="email-footer">
+            <p>© 2026 Zero To Hero. All rights reserved.</p>
+            <p>Empowering learners worldwide 🌍</p>
+            <div class="social-links">
+                <a href="#">Twitter</a> • 
+                <a href="#">LinkedIn</a> • 
+                <a href="#">Instagram</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 12px;">
+                You're receiving this email because you have an account on Zero To Hero.<br>
+                <a href="#" style="color: #64748b;">Unsubscribe</a> | 
+                <a href="#" style="color: #64748b;">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

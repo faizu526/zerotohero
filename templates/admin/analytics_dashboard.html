@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard - Zero To Hero{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-3">📊 Analytics Dashboard</h1>
+            <p class="text-white-50">Real-time insights and statistics</p>
+        </div>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="row g-4 mb-5">
+        <!-- Users Card -->
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center">
+                <div class="display-4 mb-2">👥</div>
+                <h3 class="h2 mb-1">{{ total_users }}</h3>
+                <p class="text-white-50 mb-0">Total Users</p>
+                <small class="text-success">+{{ new_users_30d }} this month</small>
+            </div>
+        </div>
+
+        <!-- Orders Card -->
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center">
+                <div class="display-4 mb-2">📦</div>
+                <h3 class="h2 mb-1">{{ total_orders }}</h3>
+                <p class="text-white-50 mb-0">Total Orders</p>
+                <small class="text-success">+{{ orders_30d }} this month</small>
+            </div>
+        </div>
+
+        <!-- Revenue Card -->
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center">
+                <div class="display-4 mb-2">💰</div>
+                <h3 class="h2 mb-1">₹{{ revenue_30d|floatformat:0 }}</h3>
+                <p class="text-white-50 mb-0">Revenue (30d)</p>
+                <small class="text-success">₹{{ revenue_today|floatformat:0 }} today</small>
+            </div>
+        </div>
+
+        <!-- Affiliates Card -->
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center">
+                <div class="display-4 mb-2">🤝</div>
+                <h3 class="h2 mb-1">{{ total_affiliates }}</h3>
+                <p class="text-white-50 mb-0">Affiliates</p>
+                <small class="text-info">₹{{ total_commissions|floatformat:0 }} paid</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row g-4 mb-5">
+        <!-- Daily Orders Chart -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4">
+                <h4 class="mb-4">📈 Daily Orders (Last 30 Days)</h4>
+                <canvas id="dailyOrdersChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- User Types -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4">
+                <h4 class="mb-4">👤 User Types</h4>
+                <canvas id="userTypesChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products & Platforms -->
+    <div class="row g-4 mb-5">
+        <!-- Top Products -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h4 class="mb-4">🔥 Top Products</h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th class="text-end">Orders</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in top_products|slice:":5" %}
+                            <tr>
+                                <td>{{ product.name|truncatechars:30 }}</td>
+                                <td class="text-end">{{ product.order_count }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center text-white-50">No data available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Stats -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h4 class="mb-4">🌐 Platform Performance</h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th class="text-end">Products</th>
+                                <th class="text-end">Orders</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for platform in platform_stats|slice:":5" %}
+                            <tr>
+                                <td>{{ platform.name }}</td>
+                                <td class="text-end">{{ platform.product_count }}</td>
+                                <td class="text-end">{{ platform.order_count }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-white-50">No data available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <h4 class="mb-3">🔗 Quick Links</h4>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'user-analytics' %}" class="glass-btn">👥 User Analytics</a>
+                    <a href="{% url 'sales-analytics' %}" class="glass-btn">💰 Sales Analytics</a>
+                    <a href="{% url 'affiliate-analytics' %}" class="glass-btn">🤝 Affiliate Analytics</a>
+                    <a href="/admin/" class="glass-btn">⚙️ Django Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Django JSON Data -->
+{{ daily_orders|json_script:"dailyOrdersData" }}
+{{ user_types|json_script:"userTypesData" }}
+
+<script>
+// Daily Orders Chart
+const dailyOrdersCtx = document.getElementById('dailyOrdersChart').getContext('2d');
+
+// Parse Django template data safely
+const dailyOrdersData = JSON.parse(document.getElementById('dailyOrdersData').textContent);
+const dates = dailyOrdersData.map(function(d) { return d.date; });
+const orderCounts = dailyOrdersData.map(function(d) { return d.count; });
+const revenues = dailyOrdersData.map(function(d) { return d.revenue; });
+
+new Chart(dailyOrdersCtx, {
+    type: 'line',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Orders',
+            data: orderCounts,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            tension: 0.4,
+            fill: true
+        }, {
+            label: 'Revenue (₹)',
+            data: revenues,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            fill: true,
+            yAxisID: 'y1'
+        }]
+    },
+    options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false,
+                },
+            }
+        }
+    }
+});
+
+// User Types Chart
+const userTypesCtx = document.getElementById('userTypesChart').getContext('2d');
+const userTypesData = JSON.parse(document.getElementById('userTypesData').textContent);
+const userTypeLabels = userTypesData.map(function(t) { return t.user_type; });
+const userTypeCounts = userTypesData.map(function(t) { return t.count; });
+
+new Chart(userTypesCtx, {
+    type: 'doughnut',
+    data: {
+        labels: userTypeLabels,
+        datasets: [{
+            data: userTypeCounts,
+            backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#fff'
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

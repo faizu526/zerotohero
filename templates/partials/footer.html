@@ -1,0 +1,43 @@
+<!-- templates/partials/footer.html -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <a href="{% url 'home' %}" class="footer-logo">
+                    🚀 Zero To <span>Hero</span>
+                </a>
+                <p class="footer-description">
+                    World's largest curated learning marketplace. 500+ platforms, 200+ hidden gems,
+                    94% price to students. Built by a student, for students.
+                </p>
+            </div>
+            <div>
+                <h4>Platforms</h4>
+                <ul>
+                    <li><a href="{% url 'platforms' %}?category=cybersecurity">🔐 Cybersecurity</a></li>
+                    <li><a href="{% url 'platforms' %}?category=programming">🐍 Programming</a></li>
+                    <li><a href="{% url 'platforms' %}?category=webdev">🌐 Web Dev</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+                    <li><a href="{% url 'roadmap' %}">🛣️ Roadmaps</a></li>
+                    <li><a href="{% url 'certifications' %}">📜 Free Certs</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="{% url 'about' %}">👨‍💻 About</a></li>
+                    <li><a href="{% url 'contact' %}">📬 Contact</a></li>
+                    <li><a href="{% url 'faq' %}">❓ FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Zero To Hero · Built by a student, for students 🇮🇳</p>
+        </div>
+    </div>
+</footer>

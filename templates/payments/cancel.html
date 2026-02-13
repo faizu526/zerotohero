@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Cancelled · Zero To Hero{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="glass-card p-5" style="max-width:500px; margin:0 auto;">
+        <div style="font-size:5rem; margin-bottom:1rem;">😔</div>
+        <h2 class="mb-3">Payment Cancelled</h2>
+        <p class="mb-4">Your payment was cancelled. No charges were made to your account.</p>
+        
+        <div class="d-grid gap-2">
+            <a href="{% url 'checkout' %}" class="btn btn-primary">Try Again →</a>
+            <a href="{% url 'cart' %}" class="btn btn-outline-light">Back to Cart</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

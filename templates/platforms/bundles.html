@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Bundles · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - BUNDLES PAGE ONLY -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .logo span { color: #0f172a; }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color: #2563eb; }
+        .nav-buttons { display: flex; gap: 1rem; }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #334155;
+        }
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+        }
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-gem { background: #f59e0b; color: white; }
+        .btn-gem:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-commission { background: #dbeafe; color: #1e40af; }
+        .badge-gem { background: #fef3c7; color: #b45309; }
+        
+        /* Bundle Hero */
+        .bundle-hero {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            border-radius: 40px;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        /* Bundle Cards */
+        .bundle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .bundle-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 32px;
+            padding: 2rem;
+            transition: 0.2s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .bundle-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+        .bundle-card.featured {
+            border-color: #2563eb;
+            box-shadow: 0 20px 25px -5px rgba(37,99,235,0.1);
+            background: linear-gradient(135deg, white, #eff6ff);
+        }
+        .bundle-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .savings-tag {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .bundle-includes {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        @media (max-width: 1024px) {
+            .bundle-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 1rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .bundle-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    
+    <!-- INLINE JS - BUNDLES PAGE ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Bundles page loaded');
+            
+            // Bundle purchase buttons
+            document.querySelectorAll('.bundle-card .btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const bundle = this.closest('.bundle-card').querySelector('h2').textContent;
+                    alert(`📦 Bundle selected: ${bundle}\n\nThis is a demo. Checkout page will be implemented soon.`);
+                    
+                    if (this.classList.contains('btn-primary')) {
+                        window.location.href = 'cart/checkout.html';
+                    }
+                });
+            });
+            
+            // Custom bundle
+            const customBtn = document.querySelector('.btn-gem');
+            if (customBtn) {
+                customBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('✨ Custom Bundle Request\n\nPlease email us at faizu@zerotohero.tech with the courses you want to bundle. We will create a custom discount code for you!');
+                    window.location.href = 'contact.html';
+                });
+            }
+            
+            // Mobile menu
+            const mobileBtn = document.createElement('button');
+            mobileBtn.innerHTML = '☰';
+            mobileBtn.style.cssText = 'display:none; background:none; border:none; font-size:1.5rem; cursor:pointer;';
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (window.innerWidth <= 1024) {
+                mobileBtn.style.display = 'block';
+                navbar.insertBefore(mobileBtn, navbar.children[1]);
+                mobileBtn.addEventListener('click', function() {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    mobileBtn.innerHTML = navLinks.style.display === 'flex' ? '✕' : '☰';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
+        <ul class="nav-links" style="display: flex;">
+            <li><a href="{% url 'home' %}">🏠 Home</a></li>
+            <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
+            <li><a href="{% url 'products' %}">📚 Courses</a></li>
+            <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+            <li><a href="{% url 'bundles' %}" class="active">📦 Bundles</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Bundle Hero -->
+        <div class="bundle-hero">
+            <h1 style="font-family:'Caveat'; font-size:4rem; color:white; margin-bottom:1rem;">📦 Course Bundles</h1>
+            <p style="font-size:1.2rem; opacity:0.95; max-width:700px; margin:0 auto;">
+                Stack multiple courses from different platforms. <strong>Extra 5% bundle discount + 3% commission on each.</strong>
+            </p>
+        </div>
+
+        <!-- Bundle Grid -->
+        <div class="bundle-grid">
+            <!-- Ethical Hacking Mastery -->
+            <div class="bundle-card featured">
+                <span class="bundle-badge">🔥 BEST VALUE</span>
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:2.5rem;">🔐</span>
+                    <span class="savings-tag">Save ₹2,450</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Ethical Hacking Mastery</h2>
+                <p style="color:#475569;">Complete path from zero to professional penetration tester.</p>
+                
+                <div class="bundle-includes">
+                    <div style="font-weight:600; margin-bottom:0.5rem;">🎯 Includes:</div>
+                    <ul style="list-style:none; padding:0;">
+                        <li style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">✓ TryHackMe Premium (6 months)</li>
+                        <li style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">✓ HTB Penetration Tester Path</li>
+                        <li style="display:flex; align-items:center; gap:8px;">✓ CDAC Ethical Hacking (Free Cert)</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom:1rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                        <span style="color:#64748b; text-decoration:line-through;">₹14,970</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#2563eb;">₹12,520</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#475569;">Your Commission:</span>
+                        <span style="font-weight:700; color:#10b981;">+₹376 (3%)</span>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn btn-primary btn-block">Buy Bundle → Save ₹2,450</a>
+            </div>
+            
+            <!-- Python Developer Bundle -->
+            <div class="bundle-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:2.5rem;">🐍</span>
+                    <span class="savings-tag">Save ₹1,120</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Python Developer Bundle</h2>
+                <p style="color:#475569;">From basics to automation and web development.</p>
+                
+                <div class="bundle-includes">
+                    <div style="font-weight:600; margin-bottom:0.5rem;">🎯 Includes:</div>
+                    <ul style="list-style:none; padding:0;">
+                        <li style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">✓ Python for Beginners (PCEP)</li>
+                        <li style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">✓ Automate the Boring Stuff</li>
+                        <li style="display:flex; align-items:center; gap:8px;">✓ Django Masterclass</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom:1rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                        <span style="color:#64748b; text-decoration:line-through;">₹6,990</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#2563eb;">₹5,870</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Your Commission:</span>
+                        <span style="font-weight:700; color:#10b981;">+₹176 (3%)</span>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn btn-outline btn-block">View Bundle →</a>
+            </div>
+            
+            <!-- Cloud & DevOps Pro -->
+            <div class="bundle-card">
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+                    <span style="font-size:2.5rem;">☁️</span>
+                    <span class="savings-tag">Save ₹2,850</span>
+                </div>
+                <h2 style="margin-bottom:0.5rem;">Cloud & DevOps Pro</h2>
+                <p style="color:#475569;">AWS, Docker, Kubernetes, CI/CD — complete career path.</p>
+                
+                <div class="bundle-includes">
+                    <div style="font-weight:600; margin-bottom:0.5rem;">🎯 Includes:</div>
+                    <ul style="list-style:none; padding:0;">
+                        <li style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">✓ AWS Certified Cloud Practitioner</li>
+                        <li style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">✓ Docker & Kubernetes</li>
+                        <li style="display:flex; align-items:center; gap:8px;">✓ CI/CD with Jenkins</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom:1rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                        <span style="color:#64748b; text-decoration:line-through;">₹16,990</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#2563eb;">₹14,140</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Your Commission:</span>
+                        <span style="font-weight:700; color:#10b981;">+₹424 (3%)</span>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn btn-outline btn-block">View Bundle →</a>
+            </div>
+        </div>
+
+        <!-- Custom Bundle -->
+        <div style="background:linear-gradient(135deg, #fef3c7, white); border:1px solid #f59e0b; border-radius:32px; padding:2rem; margin:3rem 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:1.5rem;">
+                <span style="font-size:3rem;">✨</span>
+                <div>
+                    <h3 style="margin-bottom:0.25rem;">Want a custom bundle?</h3>
+                    <p style="color:#475569; margin:0;">Choose any 3+ courses from any platforms. Get 5% extra discount + 3% commission on all.</p>
+                </div>
+            </div>
+            <a href="#" class="btn btn-gem btn-lg" style="padding:0.75rem 2rem;">Request Custom Bundle →</a>
+        </div>
+
+        <!-- Bundle FAQ -->
+        <div style="background:white; border:1px solid #e2e8f0; border-radius:24px; padding:2rem; margin-bottom:3rem;">
+            <h3 style="margin-bottom:1.5rem;">❓ Bundle FAQs</h3>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;">
+                <div>
+                    <h4 style="margin-bottom:0.5rem;">How do bundles work?</h4>
+                    <p style="color:#475569; font-size:0.95rem;">Bundles combine courses from multiple platforms at a discounted price. One invoice, one checkout.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom:0.5rem;">Do I get individual certificates?</h4>
+                    <p style="color:#475569; font-size:0.95rem;">Yes! Each course includes its original certificate.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom:0.5rem;">Can I get a refund?</h4>
+                    <p style="color:#475569; font-size:0.95rem;">30-day money-back guarantee on bundles.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Zero To Hero · Bundles save you up to 25% + 3% commission</p>
+        </div>
+    </footer>
+</body>
+</html>

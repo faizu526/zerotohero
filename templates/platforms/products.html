@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1000+ Courses · Zero To Hero</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- INLINE CSS - PRODUCTS PAGE ONLY -->
+    <style>
+        /* ===== PRODUCTS.HTML · COURSE DIRECTORY ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.93)),
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: #0f172a;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #0f172a;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #2563eb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-commission {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-gem {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
+            list-style: none;
+        }
+
+        /* Course Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+
+        .card-gem {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, white);
+        }
+
+        .course-badge-group {
+            position: absolute;
+            top: -12px;
+            left: 1.5rem;
+            display: flex;
+            gap: 8px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin: 1rem 0;
+        }
+
+        .original-price {
+            color: #64748b;
+            text-decoration: line-through;
+            font-size: 0.95rem;
+        }
+
+        .our-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .savings-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: #64748b;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 1rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .product-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+    
+    <!-- INLINE JS - PRODUCTS PAGE ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zero To Hero · Products page loaded');
+            
+            // Add to cart demo
+            document.querySelectorAll('.product-card .btn-primary, .product-card .btn-success').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (this.classList.contains('btn-success') && this.textContent.includes('Free')) {
+                        alert('✅ Free course access! (Demo)\n\nYou have been enrolled in this free course.');
+                    } else {
+                        alert('🛒 Added to cart! (Demo)\n\nThis is a demo. Backend cart will be implemented soon.');
+                    }
+                });
+            });
+            
+            // Mobile menu
+            const mobileBtn = document.createElement('button');
+            mobileBtn.className = 'mobile-menu-btn';
+            mobileBtn.innerHTML = '☰';
+            mobileBtn.style.cssText = 'display:none; background:none; border:none; font-size:1.5rem; cursor:pointer;';
+            
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (window.innerWidth <= 1024) {
+                mobileBtn.style.display = 'block';
+                navbar.insertBefore(mobileBtn, navbar.children[1]);
+                
+                mobileBtn.addEventListener('click', function() {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    mobileBtn.innerHTML = navLinks.style.display === 'flex' ? '✕' : '☰';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
+        <ul class="nav-links" style="display: flex;">
+            <li><a href="{% url 'home' %}">🏠 Home</a></li>
+            <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
+            <li><a href="{% url 'products' %}" class="active">📚 Courses</a></li>
+            <li><a href="{% url 'hidden-gems' %}">💎 Hidden Gems</a></li>
+            <li><a href="{% url 'pricing' %}">💰 Pricing</a></li>
+            <li><a href="{% url 'roadmap' %}">🛣️ Roadmaps</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-separator">/</li>
+            <li class="breadcrumb-item active">Courses</li>
+        </ul>
+    </div>
+
+    <!-- Page Header -->
+    <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap;">
+            <div>
+                <h1 style="font-family:'Caveat'; font-size:3rem; margin-bottom:0.5rem;">📚 1000+ Courses</h1>
+                <p style="font-size:1.2rem; color:#475569; max-width:700px;">
+                    Every course at <strong>94% price</strong>. Your 3% commission funds free education.
+                </p>
+            </div>
+            <div style="display:flex; gap:1rem;">
+                <span class="badge badge-success" style="padding:8px 20px;">💰 Avg Savings: ₹180/course</span>
+                <span class="badge badge-commission" style="padding:8px 20px;">🎓 50K+ Students</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="container">
+        <div class="product-grid">
+            <!-- TryHackMe Premium -->
+            <div class="product-card">
+                <div class="course-badge-group">
+                    <span class="badge badge-commission">🔥 Bestseller</span>
+                    <span class="badge badge-commission">3% Commission</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                    <div style="width:50px; height:50px; border-radius:12px; background:linear-gradient(135deg, #fe5d42, #f29f3a); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0;">🔐</div>
+                    <div style="min-width:0;">
+                        <span style="font-size:0.9rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">TryHackMe</span>
+                        <h3 style="margin:0; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Premium Monthly</h3>
+                    </div>
+                </div>
+                <p style="color:#475569;">Access all rooms, learning paths, and CTF challenges.</p>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin:0.5rem 0;">
+                    <span class="badge badge-commission">Beginner</span>
+                    <span class="badge badge-commission">CTF</span>
+                    <span class="badge badge-success">Certificate</span>
+                </div>
+                <div style="background:#f8fafc; border-radius:16px; padding:1rem; margin:1rem 0;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span style="color:#64748b; text-decoration:line-through;">₹999</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#2563eb;">₹1,029</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#64748b;">Your commission:</span>
+                        <span style="font-weight:700; color:#10b981;">+₹30 (3%)</span>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="savings-badge">Save ₹30</span>
+                    <a href="#" class="btn btn-primary btn-sm">Add to Cart</a>
+                </div>
+            </div>
+            
+            <!-- HTB Penetration Tester -->
+            <div class="product-card">
+                <div class="course-badge-group">
+                    <span class="badge badge-commission" style="background:#ec489920; color:#9d174d;">7% Commission</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                    <div style="width:50px; height:50px; border-radius:12px; background:linear-gradient(135deg, #1a1a2e, #16213e); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0;">🎯</div>
+                    <div style="min-width:0;">
+                        <span style="font-size:0.9rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">HackTheBox</span>
+                        <h3 style="margin:0; font-size:1.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Penetration Tester</h3>
+                    </div>
+                </div>
+                <p style="color:#475569;">Complete penetration testing certification path.</p>
+                <div style="background:#f8fafc; border-radius:16px; padding:1rem; margin:1rem 0;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span style="color:#64748b; text-decoration:line-through;">₹2,999</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#2563eb;">₹3,090</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:#64748b;">Your commission:</span>
+                        <span style="font-weight:700; color:#10b981;">+₹216 (7%)</span>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="savings-badge">Save ₹90</span>
+                    <a href="#" class="btn btn-primary btn-sm">Add to Cart</a>
+                </div>
+            </div>
+            
+            <!-- PortSwigger - FREE -->
+            <div class="product-card card-gem">
+                <div class="course-badge-group">
+                    <span class="badge badge-gem">💎 HIDDEN GEM</span>
+                    <span class="badge badge-success">FREE</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                    <span style="font-size:2.5rem;">🔬</span>
+                    <div>
+                        <span style="font-size:0.9rem; color:#64748b;">PortSwigger</span>
+                        <h3 style="margin:0; font-size:1.25rem;">Web Security Academy</h3>
+                    </div>
+                </div>
+                <p style="color:#475569;">200+ free web security labs. SQLi, XSS, CSRF, SSRF.</p>
+                <div style="background:#fef3c7; border-radius:16px; padding:1rem; margin:1rem 0;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="font-weight:600; color:#b45309;">Price:</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#10b981;">FREE</span>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-success btn-sm" style="margin-left:auto;">Access Free →</a>
+            </div>
+            
+            <!-- CDAC India - FREE -->
+            <div class="product-card card-gem">
+                <div class="course-badge-group">
+                    <span class="badge badge-gem">💎 HIDDEN GEM</span>
+                    <span class="badge badge-success">FREE</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                    <span style="font-size:2.5rem;">🇮🇳</span>
+                    <div>
+                        <span style="font-size:0.9rem; color:#64748b;">CDAC India</span>
+                        <h3 style="margin:0; font-size:1.25rem;">Certified Ethical Hacking</h3>
+                    </div>
+                </div>
+                <p style="color:#475569;">Government of India certified course. International recognition.</p>
+                <div style="background:#fef3c7; border-radius:16px; padding:1rem; margin:1rem 0;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="font-weight:600; color:#b45309;">Price:</span>
+                        <span style="font-size:1.5rem; font-weight:700; color:#10b981;">FREE</span>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-success btn-sm" style="margin-left:auto;">Access Free →</a>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination" style="display:flex; justify-content:center; gap:0.5rem; margin-top:3rem;">
+            <span class="page-item active"><a href="#" class="page-link" style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px; text-decoration:none; color:#475569; background:#2563eb; color:white;">1</a></span>
+            <span class="page-item"><a href="#" class="page-link" style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px; text-decoration:none; color:#475569;">2</a></span>
+            <span class="page-item"><a href="#" class="page-link" style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px; text-decoration:none; color:#475569;">3</a></span>
+            <span class="page-item"><a href="#" class="page-link" style="display:flex; align-items:center; justify-content:center; min-width:40px; height:40px; border:1px solid #e2e8f0; border-radius:8px; text-decoration:none; color:#475569;">→</a></span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Zero To Hero · 1000+ courses at 94% price</p>
+        </div>
+    </footer>
+</body>
+</html>
