@@ -14,14 +14,18 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-your-secret-ke
 DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'lilia-vitiable-irreversibly.ngrok-free.dev', '*.ngrok-free.dev']
 
-# Add Render external hostname if available
+# Add Render/Railway external hostname if available
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
+
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    
+# Add Railway automatic hostname
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
 
 # ===== INSTALLED APPS =====
-# config/settings.py
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,7 +94,7 @@ TEMPLATES = [{
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ===== DATABASE =====
-# Check for DATABASE_URL from Render or use SQLite fallback
+# Check for DATABASE_URL from Render/Railway or use SQLite fallback
 USE_SQLITE = os.environ.get('USE_SQLITE', 'False') == 'True'
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
@@ -103,7 +107,7 @@ if USE_SQLITE or not DATABASE_URL:
         }
     }
 else:
-    # Use PostgreSQL with DATABASE_URL from Render
+    # Use PostgreSQL with DATABASE_URL from Render/Railway
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(
@@ -114,7 +118,6 @@ else:
     }
 
 # ===== AUTHENTICATION SETTINGS =====
-# Custom User Model
 AUTH_USER_MODEL = 'users.User'
 
 # Redirect URLs
@@ -173,9 +176,12 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.ngrok-free.dev',
 ]
 
-# Add Render URL to CSRF trusted origins
+# Add Render/Railway URL to CSRF trusted origins
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
+    
+if RAILWAY_PUBLIC_DOMAIN:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_PUBLIC_DOMAIN}')
 
 # Session Security
 SESSION_COOKIE_SECURE = not DEBUG
