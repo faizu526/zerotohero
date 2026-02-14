@@ -114,18 +114,31 @@ class BlogDetailView(DetailView):
 # ===== AUTH VIEWS =====
 
 def login_view(request):
-    """Login Page"""
+    """Login Page - Supports both username and email login"""
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username_or_email = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
         
-        user = authenticate(request, username=username, password=password)
+        # Try to authenticate with username first
+        user = authenticate(request, username=username_or_email, password=password)
+        
+        # If that fails, try to find user by email and authenticate
+        if user is None and '@' in username_or_email:
+            from apps.users.models import User
+            try:
+                # Case-insensitive email lookup
+                user_by_email = User.objects.filter(email__iexact=username_or_email).first()
+                if user_by_email:
+                    user = authenticate(request, username=user_by_email.username, password=password)
+            except User.DoesNotExist:
+                pass
+        
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.username}!')
             return redirect('dashboard-overview')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid username/email or password.')
     
     return render(request, 'auth/login.html')
 
@@ -163,10 +176,13 @@ def signup_view(request):
             username = f"{base_username}{counter}"
             counter += 1
         
-        # Check if email exists
-        if User.objects.filter(email=email).exists():
+        # Check if email exists (case-insensitive)
+        if User.objects.filter(email__iexact=email).exists():
             messages.error(request, 'Email already exists.')
             return render(request, 'auth/signup.html')
+        
+        # Normalize email to lowercase
+        email = email.lower()
         
         # Create user
         user = User.objects.create_user(
