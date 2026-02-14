@@ -146,45 +146,56 @@ def login_view(request):
 def signup_view(request):
     """Signup Page"""
     if request.method == 'POST':
+        # DEBUG: Print all POST data received
+        print(f"\n=== SIGNUP DEBUG ===")
+        print(f"POST data keys: {list(request.POST.keys())}")
+        print(f"Full POST data: {dict(request.POST)}")
+        
         first_name = request.POST.get('first_name', '').strip()
         last_name = request.POST.get('last_name', '').strip()
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '')
         confirm_password = request.POST.get('confirm_password', '')
         
-        # DEBUG: Print all received data
-        print(f"\n=== SIGNUP DEBUG ===")
-        print(f"Raw email received: '{email}'")
-        print(f"First name: '{first_name}'")
-        print(f"Last name: '{last_name}'")
-        print(f"Password length: {len(password)}")
-        print(f"Confirm password length: {len(confirm_password)}")
-        print(f"Passwords match: {password == confirm_password}")
+        print(f"Extracted values:")
+        print(f"  first_name: '{first_name}' (len={len(first_name)})")
+        print(f"  last_name: '{last_name}' (len={len(last_name)})")
+        print(f"  email: '{email}' (len={len(email)})")
+        print(f"  password: {'*' * len(password)} (len={len(password)})")
+        print(f"  confirm_password: {'*' * len(confirm_password)} (len={len(confirm_password)})")
         
         # Check for empty fields
         if not first_name or not last_name or not email or not password or not confirm_password:
-            print("ERROR: Empty fields detected")
-            messages.error(request, 'All fields are required.')
+            missing = []
+            if not first_name: missing.append('first_name')
+            if not last_name: missing.append('last_name')
+            if not email: missing.append('email')
+            if not password: missing.append('password')
+            if not confirm_password: missing.append('confirm_password')
+            print(f"ERROR: Missing fields: {missing}")
+            messages.error(request, f'Please fill in all fields. Missing: {", ".join(missing)}')
             return render(request, 'auth/signup.html')
         
         # Validation
         if password != confirm_password:
-            print(f"ERROR: Password mismatch - '{password}' vs '{confirm_password}'")
+            print(f"ERROR: Password mismatch!")
+            print(f"  password: {repr(password)}")
+            print(f"  confirm: {repr(confirm_password)}")
             messages.error(request, 'Passwords do not match.')
             return render(request, 'auth/signup.html')
         
         if len(password) < 8:
-            print(f"ERROR: Password too short - {len(password)} chars")
+            print(f"ERROR: Password too short ({len(password)} chars)")
             messages.error(request, 'Password must be at least 8 characters.')
             return render(request, 'auth/signup.html')
         
         from apps.users.models import User
         
-        # Normalize email to lowercase FIRST
+        # Normalize email to lowercase
         email_lower = email.lower()
         print(f"Normalized email: '{email_lower}'")
         
-        # Check if email exists (case-insensitive) - MOVED BEFORE username generation
+        # Check if email exists (case-insensitive)
         existing = User.objects.filter(email__iexact=email_lower).first()
         if existing:
             print(f"ERROR: Email already exists! Found: {existing.email} (ID: {existing.id})")
@@ -195,7 +206,6 @@ def signup_view(request):
         
         # Generate username from email
         username = email_lower.split('@')[0]
-        # Make username unique if exists
         base_username = username
         counter = 1
         while User.objects.filter(username=username).exists():
@@ -212,13 +222,13 @@ def signup_view(request):
                 first_name=first_name,
                 last_name=last_name
             )
-            print(f"SUCCESS: User created - ID: {user.id}, Username: {user.username}")
+            print(f"SUCCESS: User created! ID: {user.id}, Username: {user.username}")
         except Exception as e:
             print(f"ERROR creating user: {str(e)}")
             messages.error(request, f'Error creating account: {str(e)}')
             return render(request, 'auth/signup.html')
         
-        # Try to send welcome email, but don't fail if it errors
+        # Try to send welcome email
         try:
             from .email_utils import send_welcome_email
             send_welcome_email(user)
