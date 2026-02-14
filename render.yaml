@@ -1,15 +1,8 @@
 # 🚀 Render Deployment Configuration for Zero To Hero
-# Django Project - Free Hosting Setup
+# Django Project - Free Hosting Setup (No Credit Card Required)
 
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: zerotohero-db
-    runtime: postgresql
-    plan: free
-    ipAllowList: []
-
-  # Web Service Configuration
+  # Web Service Configuration - SQLite (No Database Service Needed)
   - type: web
     name: zerotohero
     runtime: python
@@ -24,12 +17,8 @@ services:
       - key: DEBUG
         value: "False"
       - key: USE_SQLITE
-        value: "False"
+        value: "True"
       - key: WEB_CONCURRENCY
         value: "4"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: zerotohero-db
-          property: connectionString
       - key: RENDER_EXTERNAL_HOSTNAME
         value: zerotohero.onrender.com
