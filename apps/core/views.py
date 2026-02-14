@@ -193,12 +193,16 @@ def signup_view(request):
             last_name=last_name
         )
         
-        # Send welcome email
-        from .email_utils import send_welcome_email
-        send_welcome_email(user)
+        # Try to send welcome email, but don't fail if it errors
+        try:
+            from .email_utils import send_welcome_email
+            send_welcome_email(user)
+        except Exception as e:
+            # Log the error but don't fail signup
+            print(f"Welcome email error: {e}")
         
         login(request, user)
-        messages.success(request, 'Account created successfully! Check your email for welcome message.')
+        messages.success(request, 'Account created successfully!')
         return redirect('dashboard-overview')
     
     return render(request, 'auth/signup.html')
