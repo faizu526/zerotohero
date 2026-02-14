@@ -11,23 +11,35 @@ from apps.users.models import Enrollment, Wishlist
 
 @login_required
 def dashboard_overview(request):
-    # Get user's orders statistics
-    orders = Order.objects.filter(user=request.user)
-    total_spent = orders.filter(payment_status='paid').aggregate(Sum('total'))['total__sum'] or Decimal('0')
-    total_saved = total_spent * Decimal('0.06')  # 6% average savings
-    commission_earned = orders.filter(payment_status='paid').aggregate(Sum('affiliate_commission'))['affiliate_commission__sum'] or Decimal('0')
-    
-    # Get course statistics using Enrollment
-    enrollments = Enrollment.objects.filter(user=request.user)
-    total_courses = enrollments.count()
-    in_progress = enrollments.filter(status='active').count()
-    completed = enrollments.filter(status='completed').count()
-    
-    # Recent orders (last 5)
-    recent_orders = orders.order_by('-created_at')[:5]
-    
-    # Recent enrollments (last 5)
-    recent_courses = enrollments.order_by('-enrolled_at')[:5]
+    try:
+        # Get user's orders statistics
+        orders = Order.objects.filter(user=request.user)
+        total_spent = orders.filter(payment_status='paid').aggregate(Sum('total'))['total__sum'] or Decimal('0')
+        total_saved = total_spent * Decimal('0.06')  # 6% average savings
+        commission_earned = orders.filter(payment_status='paid').aggregate(Sum('affiliate_commission'))['affiliate_commission__sum'] or Decimal('0')
+        
+        # Get course statistics using Enrollment
+        enrollments = Enrollment.objects.filter(user=request.user)
+        total_courses = enrollments.count()
+        in_progress = enrollments.filter(status='active').count()
+        completed = enrollments.filter(status='completed').count()
+        
+        # Recent orders (last 5)
+        recent_orders = orders.order_by('-created_at')[:5]
+        
+        # Recent enrollments (last 5)
+        recent_courses = enrollments.order_by('-enrolled_at')[:5]
+    except Exception as e:
+        # If there's any error, use default values
+        print(f"Dashboard error: {e}")
+        total_spent = Decimal('0')
+        total_saved = Decimal('0')
+        commission_earned = Decimal('0')
+        total_courses = 0
+        in_progress = 0
+        completed = 0
+        recent_orders = []
+        recent_courses = []
     
     context = {
         'total_spent': total_spent,
