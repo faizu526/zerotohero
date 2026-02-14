@@ -18,4 +18,7 @@ urlpatterns = [
     # Blog Pages
     path('blog/', views.BlogListView.as_view(), name='blog'),
     path('blog/<slug:slug>/', views.BlogDetailView.as_view(), name='blog_detail'),
+    
+    # Search
+    path('search/', views.search_view, name='search'),
 ]

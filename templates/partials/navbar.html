@@ -3,6 +3,24 @@
 <nav class="navbar">
    <a href="{% url 'home' %}" class="logo">🚀 Zero To <span style="color: #0f172a;">Hero</span></a>
 
+    <!-- Search Bar -->
+    <form action="{% url 'search' %}" method="GET" class="navbar-search" style="flex: 1; max-width: 400px; margin: 0 1.5rem;">
+        <div style="position: relative; display: flex; align-items: center;">
+            <input type="text" name="q" placeholder="Search platforms, courses..." 
+                   style="width: 100%; padding: 0.6rem 2.5rem 0.6rem 1rem; border: 2px solid #e2e8f0; border-radius: 9999px; font-size: 0.95rem; background: white; transition: all 0.2s;"
+                   onfocus="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px #dbeafe';"
+                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+            <button type="submit" style="position: absolute; right: 8px; background: #2563eb; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                🔍
+            </button>
+        </div>
+    </form>
+    <style>
+        @media (max-width: 768px) {
+            .navbar-search { display: none !important; }
+        }
+    </style>
+
     <ul class="nav-links">
         <li><a href="{% url 'home' %}">🏠 Home</a></li>
         <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>

@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import *
 from apps.platforms.models import Platform, Product, Bundle
 from apps.learning.models import HiddenGem
@@ -259,3 +260,56 @@ def forgot_password_view(request):
         return render(request, 'auth/forgot-password.html')
     
     return render(request, 'auth/forgot-password.html')
+
+
+# ===== SEARCH VIEW =====
+
+def search_view(request):
+    """Search across platforms, products, and hidden gems"""
+    query = request.GET.get('q', '').strip()
+    
+    if not query:
+        return render(request, 'core/search.html', {
+            'query': '',
+            'platforms': [],
+            'products': [],
+            'hidden_gems': [],
+            'total_results': 0
+        })
+    
+    # Search in platforms
+    platforms = Platform.objects.filter(
+        is_active=True
+    ).filter(
+        Q(name__icontains=query) | 
+        Q(description__icontains=query) |
+        Q(category__name__icontains=query)
+    ).distinct()[:10]
+    
+    # Search in products/courses
+    products = Product.objects.filter(
+        is_active=True
+    ).filter(
+        Q(name__icontains=query) |
+        Q(description__icontains=query) |
+        Q(platform__name__icontains=query)
+    ).distinct()[:10]
+    
+    # Search in hidden gems
+    hidden_gems = HiddenGem.objects.filter(
+        is_active=True
+    ).filter(
+        Q(title__icontains=query) |
+        Q(description__icontains=query) |
+        Q(category__icontains=query)
+    ).distinct()[:10]
+    
+    total_results = platforms.count() + products.count() + hidden_gems.count()
+    
+    return render(request, 'core/search.html', {
+        'query': query,
+        'platforms': platforms,
+        'products': products,
+        'hidden_gems': hidden_gems,
+        'total_results': total_results
+    })
