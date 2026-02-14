@@ -30,6 +30,11 @@
         <li><a href="{% url 'roadmap' %}">🛣️ Roadmaps</a></li>
         <li><a href="{% url 'about' %}">👨‍💻 About</a></li>
     </ul>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()" style="margin-right: 0.5rem;" title="Toggle Theme">
+        🌙
+    </button>
+    
     <div class="nav-buttons">
         {% if user.is_authenticated %}
             <a href="{% url 'dashboard-overview' %}" class="btn btn-secondary">📊 Dashboard</a>
