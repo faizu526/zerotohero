@@ -170,7 +170,7 @@ GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
 
 # ===== SECURITY SETTINGS =====
 # CSRF Settings
-CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = False  # Set to True only in production with HTTPS
 CSRF_COOKIE_HTTPONLY = True
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
@@ -187,7 +187,7 @@ if RAILWAY_PUBLIC_DOMAIN:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_PUBLIC_DOMAIN}')
 
 # Session Security
-SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = False  # Set to True only in production with HTTPS
 SESSION_COOKIE_HTTPONLY = True
 
 # Security Headers
