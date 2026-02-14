@@ -167,6 +167,10 @@ def signup_view(request):
             return render(request, 'auth/signup.html')
         
         from apps.users.models import User
+        
+        # Normalize email to lowercase FIRST
+        email = email.lower().strip()
+        
         # Generate username from email
         username = email.split('@')[0]
         # Make username unique if exists
@@ -180,9 +184,6 @@ def signup_view(request):
         if User.objects.filter(email__iexact=email).exists():
             messages.error(request, 'Email already exists.')
             return render(request, 'auth/signup.html')
-        
-        # Normalize email to lowercase
-        email = email.lower()
         
         # Create user
         user = User.objects.create_user(
