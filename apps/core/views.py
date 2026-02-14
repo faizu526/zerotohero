@@ -202,8 +202,8 @@ def signup_view(request):
             print(f"Welcome email error: {e}")
         
         login(request, user)
-        messages.success(request, 'Account created successfully!')
-        return redirect('dashboard-overview')
+        messages.success(request, 'Account created successfully! Welcome to your dashboard.')
+        return redirect('home')
     
     return render(request, 'auth/signup.html')
 
