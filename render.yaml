@@ -1,12 +1,13 @@
-# 🚀 Render Deployment Configuration for Zero To Hero
-# Django Project - Free Hosting Setup (No Credit Card Required)
+# 🚀 Render Deployment Configuration - FULLY AUTOMATED
+# No manual setup required - everything is pre-configured
 
 services:
-  # Web Service Configuration - SQLite (No Database Service Needed)
+  # Web Service - SQLite (No credit card required)
   - type: web
     name: zerotohero
     runtime: python
     plan: free
+    autoDeploy: true
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
@@ -22,3 +23,5 @@ services:
         value: "4"
       - key: RENDER_EXTERNAL_HOSTNAME
         value: zerotohero.onrender.com
+      - key: BASE_URL
+        value: https://zerotohero.onrender.com

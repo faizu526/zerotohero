@@ -1,201 +1,140 @@
 #!/usr/bin/env python3
 """
-🚀 Auto Deploy Script for Render
-Zero To Hero Django Project
+🚀 Zero To Hero - FULL AUTO DEPLOYMENT
+Usage: python auto_deploy.py
+This script will automatically deploy your website to Render
 """
 
 import os
-import sys
-import json
 import subprocess
-import time
-import urllib.request
-import urllib.error
+import sys
 
-# Colors for terminal output
-GREEN = '\033[92m'
-BLUE = '\033[94m'
-YELLOW = '\033[93m'
-RED = '\033[91m'
-ENDC = '\033[0m'
-
-def print_step(step_num, message):
-    print(f"\n{BLUE}[Step {step_num}]{ENDC} {message}")
-
-def print_success(message):
-    print(f"{GREEN}✅ {message}{ENDC}")
-
-def print_warning(message):
-    print(f"{YELLOW}⚠️  {message}{ENDC}")
-
-def print_error(message):
-    print(f"{RED}❌ {message}{ENDC}")
-
-def run_command(cmd, description):
-    """Run shell command and return output"""
-    print(f"  Running: {cmd}")
+def run_command(cmd, description, check=True):
+    """Run a shell command and handle errors"""
+    print(f"\n🔄 {description}...")
     try:
-        result = subprocess.run(
-            cmd, 
-            shell=True, 
-            capture_output=True, 
-            text=True,
-            timeout=60
-        )
+        result = subprocess.run(cmd, shell=True, check=check, capture_output=True, text=True)
         if result.returncode == 0:
-            print_success(f"{description} - Success!")
-            return result.stdout.strip()
+            print(f"✅ {description} complete!")
+            return True, result.stdout
         else:
-            print_error(f"{description} - Failed!")
-            print(f"  Error: {result.stderr}")
-            return None
-    except subprocess.TimeoutExpired:
-        print_error(f"{description} - Timeout!")
-        return None
-    except Exception as e:
-        print_error(f"{description} - Error: {e}")
-        return None
+            if check:
+                print(f"⚠️  {description} warning: {result.stderr}")
+            return False, result.stderr
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error in {description}: {e}")
+        if check:
+            return False, str(e)
+        return True, ""
 
-def check_git_repo():
-    """Check if git repo is properly configured"""
-    print_step(1, "Checking Git Repository")
+def setup_render_yaml():
+    """Ensure render.yaml is properly configured"""
+    print("\n📋 Setting up render.yaml...")
     
-    # Check if git is initialized
-    if not os.path.exists('.git'):
-        print_error("Git not initialized!")
-        print("  Run: git init")
-        return False
-    
-    # Check remote
-    remote = run_command("git remote -v", "Check remote")
-    if not remote or "github.com" not in remote:
-        print_error("GitHub remote not found!")
-        print("  Run: git remote add origin https://github.com/YOUR_USERNAME/zerotohero.git")
-        return False
-    
-    print_success("Git repository configured correctly")
-    return True
+    render_yaml_content = '''# 🚀 Render Deployment Configuration - FULLY AUTOMATED
+# No manual setup required - everything is pre-configured
 
-def push_to_github():
-    """Push latest code to GitHub"""
-    print_step(2, "Pushing to GitHub")
+services:
+  # Web Service - SQLite (No credit card required)
+  - type: web
+    name: zerotohero
+    runtime: python
+    plan: free
+    autoDeploy: true
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: USE_SQLITE
+        value: "True"
+      - key: WEB_CONCURRENCY
+        value: "4"
+      - key: RENDER_EXTERNAL_HOSTNAME
+        value: zerotohero.onrender.com
+      - key: BASE_URL
+        value: https://zerotohero.onrender.com
+'''
     
-    # Add all files
-    run_command("git add -A", "Add files")
+    with open('render.yaml', 'w') as f:
+        f.write(render_yaml_content)
     
-    # Commit
-    commit_msg = "Auto deploy - Render setup"
-    run_command(f'git commit -m "{commit_msg}"', "Commit changes")
-    
-    # Push
-    push_result = run_command("git push origin main", "Push to GitHub")
-    
-    if push_result is not None:
-        print_success("Code pushed to GitHub!")
-        return True
-    return False
+    print("✅ render.yaml configured")
 
-def generate_deploy_button():
-    """Generate Deploy to Render button"""
-    print_step(3, "Generating Deploy Button")
+def setup_build_script():
+    """Ensure build.sh is executable and properly configured"""
+    print("\n🔧 Setting up build.sh...")
     
-    repo_url = "https://github.com/faizu526/zerotohero"
+    build_script = '''#!/usr/bin/env bash
+# 🚀 Auto Build Script for Render
+
+set -o errexit
+
+echo "🔄 Starting build..."
+
+pip install -r requirements.txt
+mkdir -p staticfiles media
+
+echo "🎨 Collecting static files..."
+python manage.py collectstatic --no-input
+
+echo "🗄️ Running migrations..."
+python manage.py migrate --run-syncdb
+
+echo "👤 Creating admin user..."
+python manage.py shell << 'EOF'
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(username='admin').exists():
+    User.objects.create_superuser('admin', 'admin@zerotohero.com', 'admin123')
+    print('✅ Admin created: admin/admin123')
+EOF
+
+echo "✅ Build complete!"
+'''
     
-    button_md = f"""
-## 🚀 One-Click Deploy to Render
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo={repo_url})
-
-**Click the button above to deploy automatically!**
-"""
+    with open('build.sh', 'w') as f:
+        f.write(build_script)
     
-    # Save to file
-    with open('DEPLOY_BUTTON.md', 'w') as f:
-        f.write(button_md)
+    os.chmod('build.sh', 0o755)
+    print("✅ build.sh configured")
+
+def commit_and_push():
+    """Commit all changes and push to GitHub"""
+    print("\n📤 Pushing to GitHub...")
     
-    print_success("Deploy button created!")
-    print(f"\n{YELLOW}👉 Open this link in browser:{ENDC}")
-    print(f"{BLUE}https://render.com/deploy?repo={repo_url}{ENDC}")
+    run_command('git config user.email "deploy@zerotohero.com"', 'Git config', check=False)
+    run_command('git config user.name "Auto Deploy"', 'Git config', check=False)
+    run_command('git add -A', 'Adding files', check=False)
     
-    return f"https://render.com/deploy?repo={repo_url}"
-
-def create_deploy_script():
-    """Create a shell script for deployment"""
-    print_step(4, "Creating Deploy Script")
+    success, _ = run_command('git commit -m "🚀 Auto-deploy: Full setup"', 'Committing', check=False)
+    success, _ = run_command('git push origin main', 'Pushing', check=False)
     
-    script_content = """#!/bin/bash
-# 🚀 Auto Deploy Script for Render
-
-echo "🔄 Starting deployment..."
-
-# Colors
-GREEN='\\033[0;32m'
-BLUE='\\033[0;34m'
-NC='\\033[0m'
-
-echo -e "${BLUE}Step 1: Checking GitHub repo...${NC}"
-git status
-
-echo -e "${BLUE}Step 2: Pushing latest code...${NC}"
-git add -A
-git commit -m "Deploy: $(date)" || echo "No changes to commit"
-git push origin main
-
-echo -e "${GREEN}✅ Code pushed to GitHub!${NC}"
-echo ""
-echo -e "${BLUE}👉 Now open this link to deploy:${NC}"
-echo -e "${GREEN}https://render.com/deploy?repo=https://github.com/faizu526/zerotohero${NC}"
-echo ""
-echo "Click 'Create Web Service' and your site will be live!"
-"""
-
-    with open('deploy_render.sh', 'w') as f:
-        f.write(script_content)
-    
-    # Make executable
-    os.chmod('deploy_render.sh', 0o755)
-    
-    print_success("Deploy script created: deploy_render.sh")
+    return success
 
 def main():
-    """Main deployment function"""
-    print(f"\n{GREEN}{'='*60}{ENDC}")
-    print(f"{GREEN}  🚀 ZERO TO HERO - AUTO DEPLOY TO RENDER{ENDC}")
-    print(f"{GREEN}{'='*60}{ENDC}")
+    print("🚀 ZERO TO HERO - FULL AUTO DEPLOYMENT")
+    print("="*60)
     
-    # Check current directory
     if not os.path.exists('manage.py'):
-        print_error("Not in Django project root directory!")
-        print("  Please run from /home/redmoon/zerotohero")
+        print("❌ Error: Run from project root")
         sys.exit(1)
     
-    # Step 1: Check Git
-    if not check_git_repo():
-        print_error("Please fix git issues first!")
-        sys.exit(1)
+    setup_render_yaml()
+    setup_build_script()
     
-    # Step 2: Push to GitHub
-    push_to_github()
-    
-    # Step 3: Generate deploy button
-    deploy_url = generate_deploy_button()
-    
-    # Step 4: Create deploy script
-    create_deploy_script()
-    
-    # Final output
-    print(f"\n{GREEN}{'='*60}{ENDC}")
-    print(f"{GREEN}  ✅ SETUP COMPLETE!{ENDC}")
-    print(f"{GREEN}{'='*60}{ENDC}")
-    print(f"\n{YELLOW}🎯 NEXT STEPS:{ENDC}")
-    print(f"  1. Open this link in your browser:")
-    print(f"     {BLUE}{deploy_url}{ENDC}")
-    print(f"\n  2. Click 'Create Web Service' button")
-    print(f"  3. Wait 5-10 minutes for deployment")
-    print(f"\n{GREEN}  🌐 Your URL will be: https://zerotohero.onrender.com{ENDC}")
-    print(f"\n{YELLOW}📋 Alternative:{ENDC}")
-    print(f"  Run: {BLUE}./deploy_render.sh{ENDC} to deploy again")
-    print(f"\n{GREEN}{'='*60}{ENDC}\n")
+    if commit_and_push():
+        print("\n" + "="*60)
+        print("🎉 READY! Go to:")
+        print("   https://render.com/deploy?repo=https://github.com/faizu526/zerotohero")
+        print("\n🔐 Admin: admin/admin123")
+        print("="*60)
+    else:
+        print("\n⚠️  Push failed. Try: git push origin main")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

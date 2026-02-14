@@ -1,28 +1,26 @@
 #!/usr/bin/env bash
-# 🚀 Build Script for Render Deployment
+# 🚀 Auto Build Script for Render
 
 set -o errexit
 
 echo "🔄 Starting build..."
 
-# Install dependencies
 pip install -r requirements.txt
+mkdir -p staticfiles media
 
-# Collect static files
+echo "🎨 Collecting static files..."
 python manage.py collectstatic --no-input
 
-# Run migrations
-python manage.py migrate
+echo "🗄️ Running migrations..."
+python manage.py migrate --run-syncdb
 
-# Create default superuser if none exists (for admin access)
+echo "👤 Creating admin user..."
 python manage.py shell << 'EOF'
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='admin').exists():
     User.objects.create_superuser('admin', 'admin@zerotohero.com', 'admin123')
-    print('✅ Default superuser created: admin/admin123')
-else:
-    print('ℹ️ Superuser already exists')
+    print('✅ Admin created: admin/admin123')
 EOF
 
 echo "✅ Build complete!"

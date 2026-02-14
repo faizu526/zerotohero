@@ -205,3 +205,63 @@ class Certificate(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.product.name}"
+
+
+class EmailOTP(models.Model):
+    """Email OTP Verification System"""
+    OTP_TYPE_CHOICES = [
+        ('signup', 'Signup Verification'),
+        ('password_reset', 'Password Reset'),
+        ('email_change', 'Email Change'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_otps', null=True, blank=True)
+    email = models.EmailField()
+    otp_code = models.CharField(max_length=6)
+    otp_type = models.CharField(max_length=20, choices=OTP_TYPE_CHOICES, default='signup')
+    
+    # Verification status
+    is_verified = models.BooleanField(default=False)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    
+    # Expiry
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    
+    # Attempts tracking
+    attempts = models.IntegerField(default=0)
+    max_attempts = models.IntegerField(default=3)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Email OTP'
+        verbose_name_plural = 'Email OTPs'
+    
+    def __str__(self):
+        return f"{self.email} - {self.otp_type} - {'Verified' if self.is_verified else 'Pending'}"
+    
+    def is_expired(self):
+        from django.utils import timezone
+        return timezone.now() > self.expires_at
+    
+    def can_attempt(self):
+        return self.attempts < self.max_attempts and not self.is_verified and not self.is_expired()
+    
+    def verify(self, code):
+        """Verify OTP code"""
+        from django.utils import timezone
+        
+        if not self.can_attempt():
+            return False, "OTP expired or max attempts reached"
+        
+        self.attempts += 1
+        self.save()
+        
+        if self.otp_code == code:
+            self.is_verified = True
+            self.verified_at = timezone.now()
+            self.save()
+            return True, "OTP verified successfully"
+        
+        remaining = self.max_attempts - self.attempts
+        return False, f"Invalid OTP. {remaining} attempts remaining"
