@@ -47,7 +47,7 @@
 
         /* Navbar */
         .navbar {
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid #e2e8f0;
             padding: 1rem 2rem;
@@ -57,6 +57,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .logo {
@@ -65,6 +66,7 @@
             font-weight: 700;
             color: #2563eb;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .logo span {
@@ -75,6 +77,8 @@
             display: flex;
             gap: 2rem;
             list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .nav-links a {
@@ -85,6 +89,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
 
         .nav-links a:hover,
@@ -95,6 +100,90 @@
         .nav-buttons {
             display: flex;
             gap: 1rem;
+            flex-wrap: nowrap;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 1rem;
+            }
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0.75rem 1rem;
+            }
+            
+            .navbar-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+                padding: 1rem 0;
+                border-top: 1px solid #e2e8f0;
+                margin-top: 0.5rem;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                width: 100%;
+            }
+            
+            .nav-links a {
+                padding: 0.75rem;
+                border-radius: 8px;
+                justify-content: flex-start;
+            }
+            
+            .nav-links a:hover {
+                background: #f1f5f9;
+            }
+            
+            .nav-buttons {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding-top: 0.5rem;
+            }
+            
+            .nav-buttons.active {
+                display: flex;
+            }
+            
+            .nav-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         .btn {
@@ -219,7 +308,14 @@
 
         @media (max-width: 768px) {
             .gem-grid { grid-template-columns: 1fr; }
-            .gem-hero h1 { font-size: 2.5rem; }
+            .gem-hero h1 { font-size: 2rem; }
+            .gem-hero { padding: 2rem 1rem; }
+            .container { padding: 0 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .gem-hero h1 { font-size: 1.75rem; }
+            .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
         }
     </style>
     
@@ -242,8 +338,11 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
-        <ul class="nav-links" style="display: flex;">
+        <div class="navbar-header">
+            <a href="{% url 'home' %}" class="logo">🚀 Zero To <span>Hero</span></a>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+        <ul class="nav-links" id="navLinks">
             <li><a href="{% url 'home' %}">🏠 Home</a></li>
             <li><a href="{% url 'platforms' %}">🌐 Platforms</a></li>
             <li><a href="{% url 'products' %}">📚 Courses</a></li>
@@ -251,7 +350,7 @@
             <li><a href="{% url 'pricing' %}">💰 Pricing</a></li>
             <li><a href="{% url 'roadmap' %}">🛣️ Roadmaps</a></li>
         </ul>
-        <div class="nav-buttons">
+        <div class="nav-buttons" id="navButtons">
             <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Login</a>
             <a href="{% url 'signup' %}" class="btn btn-primary">✨ Sign Up</a>
         </div>

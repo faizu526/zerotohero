@@ -209,8 +209,8 @@
         <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             <div style="margin-bottom:1rem;">
-                <label>Email</label>
-                <input type="email" id="email" name="email" class="glass-input" placeholder="student@example.com" required>
+                <label>Email or Username</label>
+                <input type="text" id="username" name="username" class="glass-input" placeholder="student@example.com" required>
             </div>
             <div style="margin-bottom:1rem;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
