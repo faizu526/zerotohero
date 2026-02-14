@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>About Founder · Zero To Hero</title>
     
     <!-- Google Fonts -->
@@ -32,7 +32,79 @@
             backdrop-filter: blur(1px);
             z-index: -1;
         }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 0 0.75rem; }
+            .navbar { 
+                flex-direction: column; 
+                gap: 0.75rem;
+                padding: 0.75rem;
+            }
+            .nav-links { 
+                flex-wrap: wrap; 
+                justify-content: center;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .founder-story {
+                padding: 1.5rem;
+                border-radius: 24px;
+            }
+            .founder-story > div {
+                grid-template-columns: 1fr !important;
+                text-align: center;
+            }
+            .founder-story h1 {
+                font-size: 2rem !important;
+            }
+            .founder-story h2 {
+                font-size: 1.2rem !important;
+            }
+            .journey-timeline {
+                padding: 1rem 0;
+            }
+            .journey-timeline::before {
+                left: 15px;
+            }
+            .journey-item {
+                padding-left: 40px;
+                gap: 1rem;
+            }
+            .journey-dot {
+                left: 5px;
+                width: 16px;
+                height: 16px;
+            }
+            .journey-year {
+                font-size: 1rem;
+                min-width: 60px;
+            }
+            .value-card {
+                padding: 1.5rem 1rem;
+            }
+            .value-icon {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container { padding: 0 0.5rem; }
+            .logo { font-size: 1.5rem; }
+            .founder-story { padding: 1rem; }
+            .founder-story h1 { font-size: 1.7rem !important; }
+            .journey-item h4 { font-size: 1rem; }
+            .journey-item p { font-size: 0.9rem; }
+        }
         
         /* Navbar (same as previous) */
         .navbar {
@@ -203,10 +275,6 @@
             color: #64748b;
         }
         
-        @media (max-width: 768px) {
-            .navbar { flex-direction: column; gap: 1rem; }
-            .nav-links { flex-wrap: wrap; justify-content: center; }
-        }
     </style>
     
     <!-- INLINE JS - ABOUT PAGE ONLY -->
@@ -251,7 +319,7 @@
     <div class="container">
         <!-- Founder Story -->
         <div class="founder-story">
-            <div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:center;">
+            <div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:center;" class="founder-grid">
                 <div style="text-align:center;">
                     <div style="font-size:6rem; background:white; width:150px; height:150px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; border:4px solid #2563eb;">
                         👨‍💻
@@ -329,7 +397,13 @@
             <p style="font-size:1.3rem; text-align:center; color:#0f172a; max-width:800px; margin:0 auto 2rem;">
                 "Make world-class tech education accessible to every student — regardless of their budget."
             </p>
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2rem;">
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2rem;" class="values-grid">
+                <style>
+                    @media (max-width: 768px) {
+                        .values-grid { grid-template-columns: 1fr !important; }
+                        .founder-grid { grid-template-columns: 1fr !important; }
+                    }
+                </style>
                 <div class="value-card">
                     <div class="value-icon">💰</div>
                     <h3 style="margin-bottom:0.5rem;">94% Price</h3>
@@ -351,7 +425,23 @@
         <!-- Impact Numbers -->
         <div style="background:linear-gradient(135deg, #2563eb, #1e40af); color:white; border-radius:40px; padding:3rem; margin-bottom:3rem;">
             <h2 style="font-family:'Caveat'; font-size:2.5rem; color:white; text-align:center; margin-bottom:2rem;">📊 Our Impact So Far</h2>
-            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; text-align:center;">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; text-align:center;" class="stats-grid">
+                <style>
+                    @media (max-width: 768px) {
+                        .stats-grid { 
+                            grid-template-columns: repeat(2, 1fr) !important;
+                            gap: 1rem !important;
+                        }
+                        .stats-grid div div:first-child {
+                            font-size: 2rem !important;
+                        }
+                    }
+                    @media (max-width: 480px) {
+                        .stats-grid { 
+                            grid-template-columns: 1fr !important;
+                        }
+                    }
+                </style>
                 <div><div style="font-size:3rem; font-weight:700;">50K+</div><div>Students Helped</div></div>
                 <div><div style="font-size:3rem; font-weight:700;">₹2.5Cr+</div><div>Student Savings</div></div>
                 <div><div style="font-size:3rem; font-weight:700;">200+</div><div>Hidden Gems</div></div>
