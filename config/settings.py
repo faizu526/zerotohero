@@ -59,8 +59,8 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-# Custom User Model
-AUTH_USER_MODEL = 'users.User'
+# Custom User Model (defined below in AUTHENTICATION SETTINGS)
+# AUTH_USER_MODEL = 'users.User'  # Removed duplicate - defined at line 84
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -119,6 +119,9 @@ else:
 
 # ===== AUTHENTICATION SETTINGS =====
 AUTH_USER_MODEL = 'users.User'
+
+# Base URL for affiliate links and emails
+BASE_URL = os.environ.get('BASE_URL', 'https://zerotohero-uecu.onrender.com')
 
 # Redirect URLs
 LOGIN_URL = 'login'

@@ -14,7 +14,7 @@ def send_welcome_email(user):
     # Render email template
     html_message = render_to_string('emails/welcome_email.html', {
         'user': user,
-        'dashboard_url': f"{settings.SITE_URL}/dashboard/overview/" if hasattr(settings, 'SITE_URL') else '/dashboard/overview/',
+        'dashboard_url': f"{settings.BASE_URL}/dashboard/overview/" if hasattr(settings, 'BASE_URL') else '/dashboard/overview/',
     })
     
     # Create plain text version
@@ -61,9 +61,9 @@ def send_order_confirmation_email(user, order, payment_id=None):
         'total_amount': total_amount,
         'payment_id': payment_id or 'N/A',
         'order_date': order.created_at.strftime('%B %d, %Y') if hasattr(order, 'created_at') else 'Today',
-        'my_courses_url': f"{settings.SITE_URL}/dashboard/my-courses/" if hasattr(settings, 'SITE_URL') else '/dashboard/my-courses/',
-        'support_url': f"{settings.SITE_URL}/contact/" if hasattr(settings, 'SITE_URL') else '/contact/',
-        'affiliate_link': f"{settings.SITE_URL}/?ref={user.affiliate_code}" if hasattr(settings, 'SITE_URL') else f'/?ref={user.affiliate_code}',
+        'my_courses_url': f"{settings.BASE_URL}/dashboard/my-courses/" if hasattr(settings, 'BASE_URL') else '/dashboard/my-courses/',
+        'support_url': f"{settings.BASE_URL}/contact/" if hasattr(settings, 'BASE_URL') else '/contact/',
+        'affiliate_link': f"{settings.BASE_URL}/?ref={user.affiliate_code}" if hasattr(settings, 'BASE_URL') else f'/?ref={user.affiliate_code}',
     })
     
     # Create plain text version
