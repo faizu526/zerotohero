@@ -34,3 +34,6 @@ dj-database-url>=2.1.0
 django-debug-toolbar>=4.2.0
 razorpay==2.0.0
 requests==2.32.5
+
+# CKEditor - Rich Text Editor
+django-ckeditor>=6.7.0
