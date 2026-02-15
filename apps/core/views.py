@@ -116,6 +116,10 @@ class BlogDetailView(DetailView):
 
 def login_view(request):
     """Login Page - Supports both username and email login"""
+    # If user is already logged in, redirect to dashboard
+    if request.user.is_authenticated:
+        return redirect('dashboard-overview')
+    
     if request.method == 'POST':
         username_or_email = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
@@ -146,6 +150,10 @@ def login_view(request):
 
 def signup_view(request):
     """Signup Page"""
+    # If user is already logged in, redirect to dashboard
+    if request.user.is_authenticated:
+        return redirect('dashboard-overview')
+    
     if request.method == 'POST':
         first_name = request.POST.get('first_name', '').strip()
         last_name = request.POST.get('last_name', '').strip()
@@ -212,12 +220,17 @@ def signup_view(request):
         except Exception as e:
             pass  # Email failure shouldn't stop signup
         
-        # Login the user properly
-        from django.contrib.auth import login as auth_login
-        auth_login(request, user)
-        
-        messages.success(request, f'Welcome {first_name}! Your account has been created successfully.')
-        return redirect('dashboard-overview')
+        # Authenticate and login the user properly
+        from django.contrib.auth import authenticate, login as auth_login
+        authenticated_user = authenticate(request, username=username, password=password)
+        if authenticated_user is not None:
+            auth_login(request, authenticated_user)
+            messages.success(request, f'Welcome {first_name}! Your account has been created successfully.')
+            return redirect('dashboard-overview')
+        else:
+            # If authentication fails, still show success but ask to login
+            messages.success(request, f'Account created! Please login with your email and password.')
+            return redirect('login')
     
     return render(request, 'auth/signup.html')
 
