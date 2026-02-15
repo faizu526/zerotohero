@@ -199,12 +199,58 @@ class Certificate(models.Model):
     product = models.ForeignKey('platforms.Product', on_delete=models.CASCADE)
     certificate_id = models.CharField(max_length=100, unique=True)
     pdf_file = models.FileField(upload_to='certificates/', blank=True)
-    
+
     issued_at = models.DateTimeField(auto_now_add=True)
     download_count = models.IntegerField(default=0)
-    
+
     def __str__(self):
         return f"{self.user.username} - {self.product.name}"
+
+
+class UserSkillProgress(models.Model):
+    """Skill Progress System - Track user skills and progress"""
+    
+    DEFAULT_SKILLS = [
+        'Python',
+        'Networking',
+        'Cybersecurity',
+        'Web Security',
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skill_progress')
+    skill_name = models.CharField(max_length=100)
+    level = models.IntegerField(default=1)
+    progress_percent = models.IntegerField(default=0)
+    xp = models.IntegerField(default=0)
+    is_unlocked = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ['user', 'skill_name']
+        ordering = ['skill_name']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.skill_name} (Level {self.level})"
+    
+    @classmethod
+    def create_default_skills(cls, user):
+        """Create default skills for a user if they don't exist"""
+        created_skills = []
+        for skill_name in cls.DEFAULT_SKILLS:
+            skill, created = cls.objects.get_or_create(
+                user=user,
+                skill_name=skill_name,
+                defaults={
+                    'level': 1,
+                    'progress_percent': 0,
+                    'xp': 0,
+                    'is_unlocked': True,
+                }
+            )
+            if created:
+                created_skills.append(skill)
+        return created_skills
 
 
 class EmailOTP(models.Model):

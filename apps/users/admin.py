@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, UserProfile, UserSettings, Enrollment, UserProgress, Wishlist, Certificate
+from .models import User, UserProfile, UserSettings, Enrollment, UserProgress, Wishlist, Certificate, UserSkillProgress
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
@@ -34,3 +34,10 @@ class WishlistAdmin(admin.ModelAdmin):
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):
     list_display = ['user', 'product', 'certificate_id', 'issued_at']
+
+@admin.register(UserSkillProgress)
+class UserSkillProgressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'skill_name', 'level', 'progress_percent', 'xp', 'is_unlocked', 'updated_at']
+    list_filter = ['level', 'is_unlocked']
+    search_fields = ['user__username', 'skill_name']
+    ordering = ['user', 'skill_name']

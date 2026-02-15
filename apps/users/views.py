@@ -2,10 +2,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg
 from decimal import Decimal
 from apps.orders.models import Order
-from apps.users.models import Enrollment, Wishlist
+from apps.users.models import Enrollment, Wishlist, UserSkillProgress
 
 # ===== DASHBOARD VIEWS =====
 
@@ -24,6 +24,17 @@ def dashboard_overview(request):
         in_progress = enrollments.filter(status='active').count()
         completed = enrollments.filter(status='completed').count()
         
+        # Get skill statistics
+        skills = UserSkillProgress.objects.filter(user=request.user)
+        
+        # Auto-create default skills if user doesn't have any
+        if not skills.exists():
+            UserSkillProgress.create_default_skills(request.user)
+            skills = UserSkillProgress.objects.filter(user=request.user)
+        
+        total_skills = skills.count()
+        avg_progress = skills.aggregate(Avg('progress_percent'))['progress_percent__avg'] or 0
+        
         # Recent orders (last 5)
         recent_orders = orders.order_by('-created_at')[:5]
         
@@ -38,6 +49,8 @@ def dashboard_overview(request):
         total_courses = 0
         in_progress = 0
         completed = 0
+        total_skills = 0
+        avg_progress = 0
         recent_orders = []
         recent_courses = []
     
@@ -48,6 +61,8 @@ def dashboard_overview(request):
         'total_courses': total_courses,
         'in_progress': in_progress,
         'completed': completed,
+        'total_skills': total_skills,
+        'avg_progress': round(avg_progress, 1),
         'recent_orders': recent_orders,
         'recent_courses': recent_courses,
     }
@@ -202,3 +217,34 @@ def dashboard_affiliate(request):
         'affiliate_code': request.user.affiliate_code or 'Not generated',
     }
     return render(request, 'users/dashboard/affiliate.html', context)
+
+
+@login_required
+def user_skill_dashboard(request):
+    """
+    Skill Dashboard - Display user's skill progress
+    Auto-creates default skills if user doesn't have any
+    """
+    # Get user's skill progress
+    skills = UserSkillProgress.objects.filter(user=request.user)
+    
+    # Auto-create default skills if user doesn't have any
+    if not skills.exists():
+        UserSkillProgress.create_default_skills(request.user)
+        # Refresh the skills query
+        skills = UserSkillProgress.objects.filter(user=request.user)
+    
+    # Calculate statistics
+    total_skills = skills.count()
+    avg_progress = skills.aggregate(Avg('progress_percent'))['progress_percent__avg'] or 0
+    total_xp = skills.aggregate(Sum('xp'))['xp__sum'] or 0
+    unlocked_skills = skills.filter(is_unlocked=True).count()
+    
+    context = {
+        'skills': skills,
+        'total_skills': total_skills,
+        'avg_progress': round(avg_progress, 1),
+        'total_xp': total_xp,
+        'unlocked_skills': unlocked_skills,
+    }
+    return render(request, 'users/dashboard/skills.html', context)

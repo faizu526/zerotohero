@@ -1,8 +1,8 @@
-# 🚀 Render Deployment Configuration - PostgreSQL Version
-# Uses EXISTING PostgreSQL database (set DATABASE_URL manually in dashboard)
+# 🚀 Render Deployment Configuration - FULLY AUTOMATED
+# No manual setup required - everything is pre-configured
 
 services:
-  # Web Service - Uses existing PostgreSQL database
+  # Web Service - SQLite (No credit card required)
   - type: web
     name: zerotohero
     runtime: python
@@ -18,12 +18,10 @@ services:
       - key: DEBUG
         value: "False"
       - key: USE_SQLITE
-        value: "False"
+        value: "True"
       - key: WEB_CONCURRENCY
         value: "4"
-      - key: DATABASE_URL
-        sync: false  # Set this manually in Render dashboard from your existing database
       - key: RENDER_EXTERNAL_HOSTNAME
-        sync: false  # Will be auto-populated by Render
+        value: zerotohero.onrender.com
       - key: BASE_URL
-        sync: false  # Set to your actual URL after first deploy
+        value: https://zerotohero.onrender.com
