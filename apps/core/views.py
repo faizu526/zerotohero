@@ -214,6 +214,8 @@ def signup_view(request):
         
         # Login the user directly (skip authenticate - we just created the user)
         from django.contrib.auth import login as auth_login
+        # Set the backend attribute required by Django's auth system
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
         auth_login(request, user)
         messages.success(request, f'Welcome {first_name}! Your account has been created successfully.')
         return redirect('dashboard-overview')
