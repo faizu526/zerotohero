@@ -109,13 +109,18 @@ if USE_SQLITE or not DATABASE_URL:
 else:
     # Use PostgreSQL with DATABASE_URL from Render/Railway
     import dj_database_url
+    # Parse database URL with SSL requirement for Render
     DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
+        'default': dj_database_url.parse(
+            DATABASE_URL,
             conn_max_age=600,
             conn_health_checks=True,
         )
     }
+    # Add SSL mode for Render PostgreSQL
+    if 'OPTIONS' not in DATABASES['default']:
+        DATABASES['default']['OPTIONS'] = {}
+    DATABASES['default']['OPTIONS']['sslmode'] = 'require'
 
 # ===== AUTHENTICATION SETTINGS =====
 AUTH_USER_MODEL = 'users.User'
