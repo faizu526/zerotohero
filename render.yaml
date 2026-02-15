@@ -1,8 +1,15 @@
 # 🚀 Render Deployment Configuration - FULLY AUTOMATED
-# No manual setup required - everything is pre-configured
+# PostgreSQL Database + Web Service
+
+databases:
+  # PostgreSQL Database (Free Tier)
+  - name: zerotohero-db
+    databaseName: zerotohero
+    user: zerotohero
+    plan: free
 
 services:
-  # Web Service - PostgreSQL Database
+  # Web Service - Connected to PostgreSQL
   - type: web
     name: zerotohero
     runtime: python
@@ -21,11 +28,11 @@ services:
         value: "False"
       - key: WEB_CONCURRENCY
         value: "4"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zerotohero-db
+          property: connectionString
       - key: RENDER_EXTERNAL_HOSTNAME
         value: zerotohero.onrender.com
       - key: BASE_URL
         value: https://zerotohero.onrender.com
-    databases:
-      - name: zerotohero
-        databaseName: zerotohero
-        user: zerotohero
