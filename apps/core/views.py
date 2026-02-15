@@ -212,17 +212,11 @@ def signup_view(request):
         except Exception as e:
             pass  # Email failure shouldn't stop signup
         
-        # Authenticate and login the user properly
-        from django.contrib.auth import authenticate, login as auth_login
-        authenticated_user = authenticate(request, username=username, password=password)
-        if authenticated_user is not None:
-            auth_login(request, authenticated_user)
-            messages.success(request, f'Welcome {first_name}! Your account has been created successfully.')
-            return redirect('dashboard-overview')
-        else:
-            # If authentication fails, still show success but ask to login
-            messages.success(request, f'Account created! Please login with your email and password.')
-            return redirect('login')
+        # Login the user directly (skip authenticate - we just created the user)
+        from django.contrib.auth import login as auth_login
+        auth_login(request, user)
+        messages.success(request, f'Welcome {first_name}! Your account has been created successfully.')
+        return redirect('dashboard-overview')
     
     return render(request, 'auth/signup.html')
 
