@@ -1,15 +1,8 @@
-# 🚀 Render Deployment Configuration - FULLY AUTOMATED
-# PostgreSQL Database + Web Service
-
-databases:
-  # PostgreSQL Database (Free Tier)
-  - name: zerotohero-db
-    databaseName: zerotohero
-    user: zerotohero
-    plan: free
+# 🚀 Render Deployment Configuration - SQLite Version
+# No PostgreSQL needed - uses SQLite (avoids free tier database limit)
 
 services:
-  # Web Service - Connected to PostgreSQL
+  # Web Service with SQLite
   - type: web
     name: zerotohero
     runtime: python
@@ -25,14 +18,10 @@ services:
       - key: DEBUG
         value: "False"
       - key: USE_SQLITE
-        value: "False"
+        value: "True"
       - key: WEB_CONCURRENCY
         value: "4"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: zerotohero-db
-          property: connectionString
       - key: RENDER_EXTERNAL_HOSTNAME
-        value: zerotohero.onrender.com
+        sync: false  # Will be auto-populated by Render
       - key: BASE_URL
-        value: https://zerotohero.onrender.com
+        sync: false  # Set to your actual URL after first deploy
