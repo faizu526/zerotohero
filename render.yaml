@@ -1,14 +1,14 @@
 # 🚀 Render Deployment Configuration - FULLY AUTOMATED
 # PostgreSQL Database + Web Service
 
-services:
+databases:
   # PostgreSQL Database (Free Tier)
-  - type: pserv
-    name: zerotohero-db
-    runtime: postgresql
+  - name: zerotohero-db
+    databaseName: zerotohero
+    user: zerotohero
     plan: free
-    ipAllowList: []
 
+services:
   # Web Service - Connected to PostgreSQL
   - type: web
     name: zerotohero
