@@ -116,10 +116,6 @@ class BlogDetailView(DetailView):
 
 def login_view(request):
     """Login Page - Supports both username and email login"""
-    # If user is already logged in, redirect to dashboard
-    if request.user.is_authenticated:
-        return redirect('dashboard-overview')
-    
     if request.method == 'POST':
         username_or_email = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
@@ -150,10 +146,6 @@ def login_view(request):
 
 def signup_view(request):
     """Signup Page"""
-    # If user is already logged in, redirect to dashboard
-    if request.user.is_authenticated:
-        return redirect('dashboard-overview')
-    
     if request.method == 'POST':
         first_name = request.POST.get('first_name', '').strip()
         last_name = request.POST.get('last_name', '').strip()
