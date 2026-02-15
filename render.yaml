@@ -1,8 +1,8 @@
-# 🚀 Render Deployment Configuration - SQLite Version
-# No PostgreSQL needed - uses SQLite (avoids free tier database limit)
+# 🚀 Render Deployment Configuration - PostgreSQL Version
+# Uses EXISTING PostgreSQL database (set DATABASE_URL manually in dashboard)
 
 services:
-  # Web Service with SQLite
+  # Web Service - Uses existing PostgreSQL database
   - type: web
     name: zerotohero
     runtime: python
@@ -18,9 +18,11 @@ services:
       - key: DEBUG
         value: "False"
       - key: USE_SQLITE
-        value: "True"
+        value: "False"
       - key: WEB_CONCURRENCY
         value: "4"
+      - key: DATABASE_URL
+        sync: false  # Set this manually in Render dashboard from your existing database
       - key: RENDER_EXTERNAL_HOSTNAME
         sync: false  # Will be auto-populated by Render
       - key: BASE_URL
