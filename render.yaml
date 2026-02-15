@@ -2,7 +2,7 @@
 # No manual setup required - everything is pre-configured
 
 services:
-  # Web Service - SQLite (No credit card required)
+  # Web Service - PostgreSQL Database
   - type: web
     name: zerotohero
     runtime: python
@@ -12,16 +12,20 @@ services:
     startCommand: "gunicorn config.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: "3.11.0"
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
       - key: USE_SQLITE
-        value: "True"
+        value: "False"
       - key: WEB_CONCURRENCY
         value: "4"
       - key: RENDER_EXTERNAL_HOSTNAME
         value: zerotohero.onrender.com
       - key: BASE_URL
         value: https://zerotohero.onrender.com
+    databases:
+      - name: zerotohero
+        databaseName: zerotohero
+        user: zerotohero
