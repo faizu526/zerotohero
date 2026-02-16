@@ -2,7 +2,7 @@
 # NO new database created - uses your existing PostgreSQL
 
 services:
-  # Web Service - Uses EXISTING database (manual setup required)
+  # Web Service
   - type: web
     name: zerotohero
     runtime: python
