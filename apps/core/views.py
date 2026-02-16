@@ -5,6 +5,11 @@ from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import *
 from apps.platforms.models import Platform, Product, Bundle
 from apps.learning.models import HiddenGem
@@ -231,13 +236,82 @@ def logout_view(request):
 
 
 def forgot_password_view(request):
-    """Forgot Password Page"""
+    """Forgot Password Page - Sends reset email"""
     if request.method == 'POST':
-        email = request.POST.get('email')
-        messages.success(request, 'If an account exists with this email, you will receive a password reset link.')
+        email = request.POST.get('email', '').strip().lower()
+        
+        if not email:
+            messages.error(request, 'Please enter your email address.')
+            return render(request, 'auth/forgot-password.html')
+        
+        from apps.users.models import User
+        try:
+            user = User.objects.get(email__iexact=email)
+            
+            # Generate token
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            # Build reset URL
+            reset_url = f"{settings.BASE_URL}/reset-password/{uid}/{token}/" if hasattr(settings, 'BASE_URL') else f"/reset-password/{uid}/{token}/"
+            
+            # Send email
+            from .email_utils import send_password_reset_email
+            email_sent = send_password_reset_email(user, reset_url)
+            
+            if email_sent:
+                messages.success(request, 'Password reset link has been sent to your email. Please check your inbox and spam folder.')
+            else:
+                messages.error(request, 'Failed to send email. Please try again later.')
+                
+        except User.DoesNotExist:
+            # Don't reveal if email exists or not (security)
+            messages.success(request, 'If an account exists with this email, you will receive a password reset link.')
+        
         return render(request, 'auth/forgot-password.html')
     
     return render(request, 'auth/forgot-password.html')
+
+
+def password_reset_confirm_view(request, uidb64, token):
+    """Password Reset Confirm - Set new password"""
+    from apps.users.models import User
+    
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password = request.POST.get('password', '')
+            confirm_password = request.POST.get('confirm_password', '')
+            
+            # Validation
+            if not password or not confirm_password:
+                messages.error(request, 'Please fill in both password fields.')
+                return render(request, 'auth/reset-password.html', {'valid_link': True})
+            
+            if password != confirm_password:
+                messages.error(request, 'Passwords do not match.')
+                return render(request, 'auth/reset-password.html', {'valid_link': True})
+            
+            if len(password) < 8:
+                messages.error(request, 'Password must be at least 8 characters long.')
+                return render(request, 'auth/reset-password.html', {'valid_link': True})
+            
+            # Set new password
+            user.set_password(password)
+            user.save()
+            
+            messages.success(request, 'Your password has been reset successfully. Please login with your new password.')
+            return redirect('login')
+        
+        return render(request, 'auth/reset-password.html', {'valid_link': True})
+    else:
+        messages.error(request, 'The password reset link is invalid or has expired.')
+        return render(request, 'auth/reset-password.html', {'valid_link': False})
 
 
 # ===== SEARCH VIEW =====
